@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar, Nav, Form, FormControl, Button } from 'react-bootstrap';
+import { Navbar, Nav } from 'react-bootstrap';
 
 const Header: React.FC = () => (
   <>
@@ -10,10 +10,6 @@ const Header: React.FC = () => (
       <Nav.Link href="/form">Cadastro</Nav.Link>
       <Nav.Link href="/precos">Preços</Nav.Link>
     </Nav>
-    <Form inline>
-      <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-      <Button variant="outline-info">Search</Button>
-    </Form>
   </Navbar>
   </>
 )
