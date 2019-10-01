@@ -1,9 +1,8 @@
 import React from 'react';
-import { Card, Container, Form, Jumbotron, Col, Row, FormLabel, ListGroupItem, ListGroup, Button } from 'react-bootstrap';
+import { Card, Container, Form, Jumbotron, Col, Row, FormLabel, ListGroup, Button, CardDeck, ListGroupItem } from 'react-bootstrap';
 import DatePicker from "react-datepicker";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowAltCircleLeft } from '@fortawesome/free-solid-svg-icons'
-import { faArrowAltCircleRight } from '@fortawesome/free-solid-svg-icons'
+import { faArrowAltCircleRight, faArrowAltCircleLeft, faUtensils, faUserFriends, faSwimmingPool, faToilet, faDrumstickBite } from '@fortawesome/free-solid-svg-icons'
 import styled from 'styled-components'
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -12,6 +11,7 @@ import slide0 from '../../img/project-preview1.jpg';
 import slide1 from '../../img/project-preview2.jpg';
 import slide2 from '../../img/project-preview3.jpg';
 import { addDays } from 'date-fns';
+
 
 const Title = styled.h1`
   text-shadow: 1px 2px #000;
@@ -25,7 +25,7 @@ const CheckInOut = styled(FormLabel)`
   text-shadow: 1px 1px #000;
 `
 
-const JumBotron = styled(Jumbotron)`
+const JumBotronContainer = styled(Jumbotron)`
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
@@ -45,20 +45,23 @@ const DivButton = styled.div`
   align-self: flex-end | center ;
 `
 
-const Section = styled.section`
+const SectionContainer = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: baseline;
+  justify-content: space-between;  
+`
+const Section = styled.section`  
+  align-items: flex-start;
+  margin-top: 15px;
+`
+const SectionTitle = styled.h4`
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0,0,0,.125);
 `
 
 const MapButton = styled(Button)`
-  
-`
-
-const StyledDatePicker = styled(DatePicker)`
-  font-size: 16px;
+  margin-bottom: 15px;
 `
 
 const images = [
@@ -120,14 +123,14 @@ class ViewPage extends React.Component<Props, State> {
     const { currentImage, showMap, startDate, endDate } = this.state;
     return (
       <>
-        <JumBotron style={{ backgroundImage: `url("${images[currentImage]}")` }}>
+        <JumBotronContainer style={{ backgroundImage: `url("${images[currentImage]}")` }}>          
           <Title>Alugue hoje para sua festa</Title>
           <SubTitle>Sua diversão começa aqui</SubTitle>
 
           <Form inline >
             <Form.Group>
               <CheckInOut column>Entrada</CheckInOut>
-              <StyledDatePicker
+              <DatePicker
                 selected={startDate}
                 minDate={new Date()}
                 onChange={date => this.setStartDate(date, 'start')}
@@ -135,7 +138,7 @@ class ViewPage extends React.Component<Props, State> {
             </Form.Group>
             <Form.Group>
               <CheckInOut column>Saida</CheckInOut>
-              <StyledDatePicker
+              <DatePicker
                 selected={endDate}
                 minDate={startDate}
                 maxDate={addDays(startDate, 5)}
@@ -150,10 +153,10 @@ class ViewPage extends React.Component<Props, State> {
             <ArrowButton onClick={this.previousImage}><FontAwesomeIcon color="#fff" icon={faArrowAltCircleLeft} /></ArrowButton>
             <ArrowButton onClick={this.nextImage}><FontAwesomeIcon color="#fff" icon={faArrowAltCircleRight} /></ArrowButton>
           </DivButton>
-
-        </JumBotron>
+          
+        </JumBotronContainer>
+        
         <Container className="describe-container">
-
           <Row>
             <Col sm={3}>
               <h4>Alugue com tranquilidade</h4>
@@ -173,70 +176,101 @@ class ViewPage extends React.Component<Props, State> {
             </Col>
           </Row>
 
-          <Section>
-            <h4>Detalhes do espaço</h4>
-            <Row>
+          <SectionContainer>
+            <SectionTitle>Detalhes do espaço</SectionTitle>
+            <Section>
+              <Row>
               <Col>
-                <ListGroup>
-                  <ListGroup.Item>Cras justo odio</ListGroup.Item>
-                  <ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
-                  <ListGroup.Item>Morbi leo risus</ListGroup.Item>
-                  <ListGroup.Item>Porta ac consectetur ac</ListGroup.Item>
-                  <ListGroup.Item>Vestibulum at eros</ListGroup.Item>
-                </ListGroup>
-              </Col>
-            </Row>
-          </Section>
-
-          <Section>
-            <h4>Disponibilidade</h4>
-            <DatePicker
-              selected={startDate}
-              onChange={date => this.setStartDate(date)}
-              inline
-            />
-          </Section>
-
-          <Section>
-            <h4>Preço</h4>
-            <Row>
-              <Col>
-                <Card style={{ width: '18rem' }}>
-                  <Card.Img variant="top" src="holder.js/100px180?text=Image cap" />
-                  <Card.Body>
-                    <Card.Title>Card Title</Card.Title>
-                    <Card.Text>
-                      Some quick example text to build on the card title and make up the bulk of
-                      the card's content.
-    </Card.Text>
-                  </Card.Body>
-                  <ListGroup className="list-group-flush">
-                    <ListGroupItem>Cras justo odio</ListGroupItem>
-                    <ListGroupItem>Dapibus ac facilisis in</ListGroupItem>
-                    <ListGroupItem>Vestibulum at eros</ListGroupItem>
+              <ListGroup className="list-group-flush">
+                    <ListGroup.Item>
+                      <FontAwesomeIcon icon={faUserFriends} />
+                      {' Capacidade para 60 pessoas.'}
+                    </ListGroup.Item>
+                    <ListGroup.Item><FontAwesomeIcon icon={faSwimmingPool} />{' Piscina com cascata.'}</ListGroup.Item>
+                    <ListGroup.Item>
+                      <FontAwesomeIcon icon={faUtensils} /> {' Pratos e talheres inclusos para todos.'}
+                    </ListGroup.Item>
+                    <ListGroup.Item><FontAwesomeIcon icon={faUtensils} />{' Mesas e cadeiras inclusos para todos.'}</ListGroup.Item>
+                    <ListGroup.Item><FontAwesomeIcon icon={faToilet} />{' Banheiro Masculino/Feminino.'}</ListGroup.Item>
                   </ListGroup>
+                  </Col>
+                  <Col>
+                  <ListGroup className="list-group-flush">
+                    <ListGroup.Item>
+                      <FontAwesomeIcon icon={faDrumstickBite} />
+                      {' Churrasqueira com balcao e pia.'}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      <FontAwesomeIcon icon={faUtensils} /> {' Pratos e talheres inclusos para todos.'}
+                    </ListGroup.Item>
+                    <ListGroup.Item>Morbi leo risus</ListGroup.Item>
+                    <ListGroup.Item>Porta ac consectetur ac</ListGroup.Item>
+                    <ListGroup.Item>Vestibulum at eros</ListGroup.Item>
+                  </ListGroup>
+                  </Col>
+                  </Row>
+            </Section>
+
+            <Section>
+              <SectionTitle>Disponibilidade</SectionTitle>
+              <DatePicker
+                selected={startDate}
+                onChange={date => this.setStartDate(date)}
+                inline
+              />
+            </Section>
+
+            <Section>
+              <SectionTitle>Preço</SectionTitle>
+              <CardDeck>
+                <Card border="info">
+                  <Card.Header>Segunda a Sexta</Card.Header>
                   <Card.Body>
-                    <Card.Link href="#">Card Link</Card.Link>
-                    <Card.Link href="#">Another Link</Card.Link>
+                    <Card.Title>R$350</Card.Title>
+                    <ListGroup className="list-group-flush">
+                        <ListGroupItem>Preco da taxa de limpeza incluso.</ListGroupItem>
+                        <ListGroupItem>Valido ate 30/11/2019.</ListGroupItem>
+                      </ListGroup>
                   </Card.Body>
                 </Card>
-              </Col>
-            </Row>
-          </Section>
+                <Card border="primary">
+                  <Card.Header>Finais de semanas</Card.Header>
+                  <Card.Body>
+                    <Card.Title>R$650</Card.Title>
+                    
+                      <ListGroup className="list-group-flush">
+                        <ListGroupItem>Preco da taxa de limpeza incluso.</ListGroupItem>
+                        <ListGroupItem>Valido ate 30/11/2019.</ListGroupItem>                        
+                      </ListGroup>
 
-          <Section>
-            <h4>Localizaçao</h4>
-            <p>R. Guaratinga, 520 - Jardim dos Passaros</p>
-            <MapButton onClick={this.toggleMap}>Expandir Mapa</MapButton>
-            {showMap && (
-              <div>
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d915.427233424145!2d-51.97698204130726!3d-23.398740832335065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ecd6885745f567%3A0xaac13ecaa32dda3d!2sR.%20Guaratinga%2C%20520%20-%20Jardim%20dos%20Passaros%2C%20Maring%C3%A1%20-%20PR%2C%2087075-240!5e0!3m2!1spt-BR!2sbr!4v1569817365041!5m2!1spt-BR!2sbr" width="800" height="450" style={{ border: 0 }}></iframe>
-              </div>
-            )}
-          </Section>
+                    </Card.Body>                  
+                </Card>
+                <Card border="success">
+                  <Card.Header>Natal e Ano Novo</Card.Header>
+                  <Card.Body>
+                    <Card.Title>R$1500</Card.Title>
+                    <ListGroup className="list-group-flush">
+                        <ListGroupItem>Preco da taxa de limpeza incluso.</ListGroupItem>
+                        <ListGroupItem>Preco valido para os dias 24/12/2019 a 03/01/2020.</ListGroupItem>                        
+                      </ListGroup>
+                  </Card.Body>
+                </Card>
+              </CardDeck>
 
 
+            </Section>
 
+            <Section>
+              <SectionTitle>Localizaçao</SectionTitle>
+              <p>R. Guaratinga, 520 - Jardim dos Passaros</p>
+              <MapButton onClick={this.toggleMap}>Expandir Mapa</MapButton>
+              {showMap && (
+                <div>
+                  <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d915.427233424145!2d-51.97698204130726!3d-23.398740832335065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ecd6885745f567%3A0xaac13ecaa32dda3d!2sR.%20Guaratinga%2C%20520%20-%20Jardim%20dos%20Passaros%2C%20Maring%C3%A1%20-%20PR%2C%2087075-240!5e0!3m2!1spt-BR!2sbr!4v1569817365041!5m2!1spt-BR!2sbr" width="800" height="450" style={{ border: 0 }} title="googleMaps" />
+                </div>
+              )}
+            </Section>
+          </SectionContainer>
         </Container>
       </>
     );
