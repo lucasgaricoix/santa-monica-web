@@ -22,7 +22,8 @@ import {
   faUserFriends,
   faSwimmingPool,
   faToilet,
-  faDrumstickBite
+  faDrumstickBite,
+  faChair
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 
@@ -32,31 +33,8 @@ import slide0 from "../../img/project-preview1.jpg";
 import slide1 from "../../img/project-preview2.jpg";
 import slide2 from "../../img/project-preview3.jpg";
 import { addDays } from "date-fns";
-
+import './style/viewpage.css'
 registerLocale("pt-BR", ptBR);
-
-const Title = styled.h1`
-  text-shadow: 1px 2px #000;
-`;
-
-const SubTitle = styled.h4`
-  text-shadow: 1px 2px #000;
-`;
-
-const CheckInOut = styled(Form.Label)`
-  font-size: 20px;
-  text-shadow: 1px 1px #000;
-`;
-
-const JumBotronContainer = styled(Jumbotron)`
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: center;
-  height: 600px;
-  color: #fff;
-`;
 
 const ArrowButton = styled.button`
   border: none;
@@ -76,7 +54,7 @@ const SectionContainer = styled.div`
 `;
 const Section = styled.section`
   align-items: flex-start;
-  margin-top: 15px;
+  margin-top: 25px;
 `;
 const SectionTitle = styled.h4`
   padding-bottom: 8px;
@@ -144,36 +122,47 @@ class ViewPage extends React.Component<Props, State> {
 
   render() {
     const { currentImage, showMap, startDate, endDate } = this.state;
-    return (
+    return (    
       <>
-        <JumBotronContainer
+        <Jumbotron
           style={{ backgroundImage: `url("${images[currentImage]}")` }}
         >
-          <Title>Alugue hoje para sua festa</Title>
-          <SubTitle>Sua diversão começa aqui</SubTitle>
+          <h1 className="title">Alugue hoje para sua festa</h1>
+          <h4 className="title">Sua diversão começa aqui</h4>
 
-          <Form inline>
+          <Form className="form-input-date" inline>
             <Form.Group>
-              <CheckInOut column>Entrada</CheckInOut>
+              <Form.Label column>Entrada</Form.Label>
               <DatePicker
+                className="form-control"
                 selected={startDate}
                 minDate={new Date()}
                 onChange={date => this.setStartDate(date, "start")}
+                dateFormat="dd/MM/yyyy"
                 locale="pt-BR"
               />
             </Form.Group>
             <Form.Group>
-              <CheckInOut column>Saida</CheckInOut>
+              <Form.Label column>Saida</Form.Label>
               <DatePicker
+                className="form-control"
                 selected={endDate}
                 minDate={startDate}
                 maxDate={addDays(startDate, 5)}
                 onChange={date => this.setStartDate(date, "end")}
                 placeholderText="Permitido apenas 5 dias de reserva."
+                dateFormat="dd/MM/yyyy"
                 locale="pt-BR"
               />
             </Form.Group>
-            <Button onClick={this.pesquisarCalendario}>Pesquisar</Button>
+            <Button
+              className="button-submit-date"
+              type="submit"
+              onClick={this.pesquisarCalendario}
+              href="#disponibilidade"
+              >
+                Pesquisar
+            </Button>
           </Form>
 
           <DivButton>
@@ -184,7 +173,7 @@ class ViewPage extends React.Component<Props, State> {
               <FontAwesomeIcon color="#fff" icon={faArrowAltCircleRight} />
             </ArrowButton>
           </DivButton>
-        </JumBotronContainer>
+        </Jumbotron>
 
         <Container className="describe-container">
           <Row>
@@ -216,8 +205,8 @@ class ViewPage extends React.Component<Props, State> {
           </Row>
 
           <SectionContainer>
-            <SectionTitle>Detalhes do espaço</SectionTitle>
             <Section>
+            <SectionTitle>Detalhes do espaço</SectionTitle>
               <Row>
                 <Col>
                   <ListGroup className="list-group-flush">
@@ -239,7 +228,7 @@ class ViewPage extends React.Component<Props, State> {
                     </ListGroup.Item>
                     <ListGroup.Item>
                       <FontAwesomeIcon icon={faToilet} />
-                      {" Banheiro Masculino/Feminino."}
+                      {" Banheiro Masculino e Feminino."}
                     </ListGroup.Item>
                   </ListGroup>
                 </Col>
@@ -251,18 +240,17 @@ class ViewPage extends React.Component<Props, State> {
                     </ListGroup.Item>
                     <ListGroup.Item>
                       <FontAwesomeIcon icon={faUtensils} />{" "}
-                      {" Pratos e talheres inclusos para todos."}
+                      {" Freezer e geladeira."}
                     </ListGroup.Item>
-                    <ListGroup.Item>Morbi leo risus</ListGroup.Item>
-                    <ListGroup.Item>Porta ac consectetur ac</ListGroup.Item>
-                    <ListGroup.Item>Vestibulum at eros</ListGroup.Item>
+                    <ListGroup.Item><FontAwesomeIcon icon={faUtensils} />{" "}{"Forno Industrial."}</ListGroup.Item>
+                    <ListGroup.Item><FontAwesomeIcon icon={faChair} />{" Cadeiras espreguiçadeira"}</ListGroup.Item>
                   </ListGroup>
                 </Col>
               </Row>
             </Section>
 
             <Section>
-              <SectionTitle>Disponibilidade</SectionTitle>
+              <SectionTitle id="disponibilidade">Disponibilidade</SectionTitle>
               <DatePicker
                 selected={this.state.available}
                 minDate={startDate}
@@ -284,31 +272,34 @@ class ViewPage extends React.Component<Props, State> {
                   <Card.Header>Segunda à Sexta</Card.Header>
                   <Card.Body>
                     <Card.Title>R$350</Card.Title>
+                  </Card.Body>
                     <ListGroup className="list-group-flush">
                       <ListGroupItem>
                         Preço da taxa de limpeza incluso.
                       </ListGroupItem>
-                      <ListGroupItem>Valido até 30/11/2019.</ListGroupItem>
+                      <ListGroupItem>Valido até 30/11/2019.</ListGroupItem>                      
+                    <ListGroupItem><Button>Quero alugar!</Button></ListGroupItem>
                     </ListGroup>
-                  </Card.Body>
                 </Card>
                 <Card border="primary">
                   <Card.Header>Finais de semanas</Card.Header>
                   <Card.Body>
                     <Card.Title>R$650</Card.Title>
-
+                  </Card.Body>
                     <ListGroup className="list-group-flush">
                       <ListGroupItem>
                         Preço da taxa de limpeza incluso.
                       </ListGroupItem>
                       <ListGroupItem>Valido até 30/11/2019.</ListGroupItem>
+                      <ListGroupItem><Button>Quero alugar!</Button></ListGroupItem>
                     </ListGroup>
-                  </Card.Body>
                 </Card>
+
                 <Card border="success">
                   <Card.Header>Natal e Ano Novo</Card.Header>
                   <Card.Body>
                     <Card.Title>R$1500</Card.Title>
+                  </Card.Body>
                     <ListGroup className="list-group-flush">
                       <ListGroupItem>
                         Preço da taxa de limpeza incluso.
@@ -316,8 +307,8 @@ class ViewPage extends React.Component<Props, State> {
                       <ListGroupItem>
                         Preço válido para os dias 24/12/2019 a 03/01/2020.
                       </ListGroupItem>
+                      <ListGroupItem><Button>Quero alugar!</Button></ListGroupItem>
                     </ListGroup>
-                  </Card.Body>
                 </Card>
               </CardDeck>
             </Section>

@@ -1,0 +1,31 @@
+.title {
+    color: #fff;
+    text-shadow: 1px 1px #000;
+    font-weight: 600;
+  }
+
+.jumbotron {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    height: 600px;  
+}
+
+.button-submit-date {
+    margin: 15px;
+}
+
+.form-input-date {
+    margin: auto;
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+}
+
+.form-label {
+    color: #fff;
+    font-weight: 600;
+    font-size: 20px;
+}
