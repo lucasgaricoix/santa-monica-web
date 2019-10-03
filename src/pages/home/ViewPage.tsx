@@ -278,7 +278,7 @@ class ViewPage extends React.Component<Props, State> {
                         Preço da taxa de limpeza incluso.
                       </ListGroupItem>
                       <ListGroupItem>Valido até 30/11/2019.</ListGroupItem>                      
-                    <ListGroupItem><Button>Quero alugar!</Button></ListGroupItem>
+                    <ListGroupItem><Button variant="success">Quero alugar!</Button></ListGroupItem>
                     </ListGroup>
                 </Card>
                 <Card border="primary">
@@ -291,7 +291,7 @@ class ViewPage extends React.Component<Props, State> {
                         Preço da taxa de limpeza incluso.
                       </ListGroupItem>
                       <ListGroupItem>Valido até 30/11/2019.</ListGroupItem>
-                      <ListGroupItem><Button>Quero alugar!</Button></ListGroupItem>
+                      <ListGroupItem><Button variant="success">Quero alugar!</Button></ListGroupItem>
                     </ListGroup>
                 </Card>
 
@@ -307,7 +307,7 @@ class ViewPage extends React.Component<Props, State> {
                       <ListGroupItem>
                         Preço válido para os dias 24/12/2019 a 03/01/2020.
                       </ListGroupItem>
-                      <ListGroupItem><Button>Quero alugar!</Button></ListGroupItem>
+                      <ListGroupItem><Button variant="success">Quero alugar!</Button></ListGroupItem>
                     </ListGroup>
                 </Card>
               </CardDeck>
