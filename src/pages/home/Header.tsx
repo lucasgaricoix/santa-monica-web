@@ -5,17 +5,18 @@ import logo from '../../img/logo-santa-monica.jpg'
 
 const Header: React.FC = () => (
   <>
-  <Navbar bg="dark" variant="dark">
-    <Navbar.Brand href="/"><img        
+  <Navbar fixed="top" className="navbar-santa-monica" bg="dark" variant="dark">
+    <Navbar.Brand className="navbar-brand" href="/"><img 
+        alt="Santa Monica logo"
         src={logo}
         width="40"
         height="40"
-        
-        className="logo"
-        alt="Santa Monica logo"
-      /></Navbar.Brand>
+        className="d-inline-block align-top"
+      />Espaço Santa Mônica</Navbar.Brand>
     <Nav className="mr-auto">
-      <Nav.Link href="/">Espaco Santa Monica</Nav.Link>
+      <Nav.Link className="description" href="#place-details">Descrição</Nav.Link>
+      <Nav.Link className="description" href="#availability">Disponibilidade</Nav.Link>
+      <Nav.Link className="description" href="#section-price">Preço</Nav.Link>
     </Nav>
   </Navbar>
   </>

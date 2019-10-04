@@ -128,13 +128,14 @@ class ViewPage extends React.Component<Props, State> {
           style={{ backgroundImage: `url("${images[currentImage]}")` }}
         >
           <h1 className="title">Alugue hoje para sua festa</h1>
-          <h4 className="title">Sua diversão começa aqui</h4>
+          <h2 className="title">Sua diversão começa aqui</h2>
 
           <Form className="form-input-date" inline>
             <Form.Group>
               <Form.Label column>Entrada</Form.Label>
               <DatePicker
                 className="form-control"
+                selectsStart
                 selected={startDate}
                 minDate={new Date()}
                 onChange={date => this.setStartDate(date, "start")}
@@ -143,15 +144,18 @@ class ViewPage extends React.Component<Props, State> {
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label column>Saida</Form.Label>
+              <Form.Label column>Saída</Form.Label>
               <DatePicker
                 className="form-control"
+                selectsEnd
                 selected={endDate}
+                startDate={startDate}
+                endDate={endDate}
                 minDate={startDate}
                 maxDate={addDays(startDate, 5)}
                 onChange={date => this.setStartDate(date, "end")}
                 placeholderText="Permitido apenas 5 dias de reserva."
-                dateFormat="dd/MM/yyyy"
+                dateFormat="dd/MM/yyyy"                
                 locale="pt-BR"
               />
             </Form.Group>
@@ -159,7 +163,7 @@ class ViewPage extends React.Component<Props, State> {
               className="button-submit-date"
               type="submit"
               onClick={this.pesquisarCalendario}
-              href="#disponibilidade"
+              href="#availability"
               >
                 Pesquisar
             </Button>
@@ -205,7 +209,7 @@ class ViewPage extends React.Component<Props, State> {
           </Row>
 
           <SectionContainer>
-            <Section>
+            <Section id="place-details" className="place-details">
             <SectionTitle>Detalhes do espaço</SectionTitle>
               <Row>
                 <Col>
@@ -249,8 +253,8 @@ class ViewPage extends React.Component<Props, State> {
               </Row>
             </Section>
 
-            <Section>
-              <SectionTitle id="disponibilidade">Disponibilidade</SectionTitle>
+            <Section id="availability">
+              <SectionTitle>Disponibilidade</SectionTitle>
               <DatePicker
                 selected={this.state.available}
                 minDate={startDate}
@@ -265,7 +269,7 @@ class ViewPage extends React.Component<Props, State> {
               />
             </Section>
 
-            <Section>
+            <Section id="section-price">
               <SectionTitle>Preço</SectionTitle>
               <CardDeck>
                 <Card border="info">

@@ -1,7 +1,7 @@
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'Voga W05 Medium',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -10,4 +10,10 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+@font-face{
+  font-family:"Voga W05 Medium";
+  src:url("./fonts/447ee4eb-3680-4ee4-bdcc-dce7cbc9315e.eot?#iefix");
+  src:url("./fonts/447ee4eb-3680-4ee4-bdcc-dce7cbc9315e.eot?#iefix") format("eot"),url("./fonts/dfa49e8a-ebd5-4963-86ca-4a3600a5fd87.woff2") format("woff2"),url("./fonts/8031cced-bcf3-4d26-98a2-692412b52d74.woff") format("woff"),url("./fonts/VogaMedium.ttf") format("truetype");
 }
