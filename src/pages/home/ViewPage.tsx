@@ -26,14 +26,14 @@ import {
   faChair
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
-
 import "react-datepicker/dist/react-datepicker.css";
+import './style/viewpage.css'
+import { addDays } from "date-fns";
+
 //Images
 import slide0 from "../../img/project-preview1.jpg";
 import slide1 from "../../img/project-preview2.jpg";
 import slide2 from "../../img/project-preview3.jpg";
-import { addDays } from "date-fns";
-import './style/viewpage.css'
 registerLocale("pt-BR", ptBR);
 
 const ArrowButton = styled.button`
@@ -121,12 +121,10 @@ class ViewPage extends React.Component<Props, State> {
   };
 
   render() {
-    const { currentImage, showMap, startDate, endDate } = this.state;
+    const { showMap, startDate, endDate } = this.state;
     return (    
       <>
-        <Jumbotron
-          style={{ backgroundImage: `url("${images[currentImage]}")` }}
-        >
+        <Jumbotron className="jumbotron-container">
           <h1 className="title">Alugue hoje para sua festa</h1>
           <h2 className="title">Sua diversão começa aqui</h2>
 

@@ -1,3 +1,13 @@
+.jumbotron-container {
+    background-image: 
+        url('../../../img/project-preview2.jpg'), 
+        url('../../../img/project-preview3.jpg'),
+        url('../../../img/project-preview1.jpg');
+    background-repeat: no-repeat;
+    background-position: center left, center, center right;
+    background-size: contain, contain, contain;
+}
+
 .title {
     color: #fff;
     text-shadow: 1px 1px #000;    
@@ -9,7 +19,7 @@
     flex-wrap: wrap;
     justify-content: flex-start;
     align-items: center;
-    height: 600px;  
+    height: 600px;
 }
 
 .button-submit-date {
