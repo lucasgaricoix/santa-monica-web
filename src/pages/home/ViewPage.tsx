@@ -16,8 +16,6 @@ import ptBR from "date-fns/locale/pt-BR";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faArrowAltCircleRight,
-  faArrowAltCircleLeft,
   faUtensils,
   faUserFriends,
   faSwimmingPool,
@@ -29,22 +27,9 @@ import styled from "styled-components";
 import "react-datepicker/dist/react-datepicker.css";
 import './style/viewpage.css'
 import { addDays } from "date-fns";
+import ModalForm from '../../components/Modal';
 
-//Images
-import slide0 from "../../img/project-preview1.jpg";
-import slide1 from "../../img/project-preview2.jpg";
-import slide2 from "../../img/project-preview3.jpg";
 registerLocale("pt-BR", ptBR);
-
-const ArrowButton = styled.button`
-  border: none;
-  background: none;
-`;
-
-const DivButton = styled.div`
-  margin-top: auto;
-  align-self: flex-end | center;
-`;
 
 const SectionContainer = styled.div`
   width: 100%;
@@ -65,16 +50,14 @@ const MapButton = styled(Button)`
   margin-bottom: 15px;
 `;
 
-const images = [slide0, slide1, slide2];
-
 type Props = {};
 
 type State = {
   currentImage: number;
   showMap: boolean;
   startDate: Date;
-  endDate: Date;
   available: Date;
+  showModal: boolean;
 };
 
 class ViewPage extends React.Component<Props, State> {
@@ -82,27 +65,11 @@ class ViewPage extends React.Component<Props, State> {
     currentImage: 0,
     showMap: false,
     startDate: new Date(),
-    endDate: new Date(),
-    available: new Date()
+    available: new Date(),
+    showModal: false
   };
 
-  previousImage = () => {
-    if (this.state.currentImage > 0) {
-      this.setState(prevState => ({
-        currentImage: prevState.currentImage - 1
-      }));
-    }
-  };
-
-  nextImage = () => {
-    if (this.state.currentImage < images.length - 1) {
-      this.setState(prevState => ({
-        currentImage: prevState.currentImage + 1
-      }));
-    }
-  };
-
-  pesquisarCalendario = () => {};
+  onSubmitForm = () => {};
 
   toggleMap = () => {
     this.setState({ showMap: true });
@@ -112,25 +79,28 @@ class ViewPage extends React.Component<Props, State> {
     if (date && type === "start") {
       this.setState({ startDate: date });
     }
-    if (date && type === "end") {
-      this.setState({ endDate: date });
-    }
     if (date && type === "available") {
       this.setState({ available: date });
     }
   };
 
+  handleShowModal = () => {
+    this.setState({ showModal: !this.state.showModal})
+  }
+
   render() {
-    const { showMap, startDate, endDate } = this.state;
+    const { showMap, startDate, showModal } = this.state;
     return (    
       <>
         <Jumbotron className="jumbotron-container">
           <h1 className="title">Alugue hoje para sua festa</h1>
           <h2 className="title">Sua diversão começa aqui</h2>
 
+          <ModalForm handleShowModal={this.handleShowModal} showModal={showModal}/>
+
           <Form className="form-input-date" inline>
             <Form.Group>
-              <Form.Label column>Entrada</Form.Label>
+              <Form.Label column>Disponibilidade</Form.Label>
               <DatePicker
                 className="form-control"
                 selectsStart
@@ -141,7 +111,7 @@ class ViewPage extends React.Component<Props, State> {
                 locale="pt-BR"
               />
             </Form.Group>
-            <Form.Group>
+            {/* <Form.Group>
               <Form.Label column>Saída</Form.Label>
               <DatePicker
                 className="form-control"
@@ -156,25 +126,16 @@ class ViewPage extends React.Component<Props, State> {
                 dateFormat="dd/MM/yyyy"                
                 locale="pt-BR"
               />
-            </Form.Group>
+            </Form.Group> */}
             <Button
               className="button-submit-date"
               type="submit"
-              onClick={this.pesquisarCalendario}
+              onClick={this.onSubmitForm}
               href="#availability"
               >
                 Pesquisar
             </Button>
           </Form>
-
-          <DivButton>
-            <ArrowButton onClick={this.previousImage}>
-              <FontAwesomeIcon color="#fff" icon={faArrowAltCircleLeft} />
-            </ArrowButton>
-            <ArrowButton onClick={this.nextImage}>
-              <FontAwesomeIcon color="#fff" icon={faArrowAltCircleRight} />
-            </ArrowButton>
-          </DivButton>
         </Jumbotron>
 
         <Container className="describe-container">
@@ -280,7 +241,7 @@ class ViewPage extends React.Component<Props, State> {
                         Preço da taxa de limpeza incluso.
                       </ListGroupItem>
                       <ListGroupItem>Valido até 30/11/2019.</ListGroupItem>                      
-                    <ListGroupItem><Button variant="success">Quero alugar!</Button></ListGroupItem>
+                    <ListGroupItem><Button variant="outline-primary" onClick={this.handleShowModal}>Quero alugar!</Button></ListGroupItem>
                     </ListGroup>
                 </Card>
                 <Card border="primary">
@@ -293,7 +254,7 @@ class ViewPage extends React.Component<Props, State> {
                         Preço da taxa de limpeza incluso.
                       </ListGroupItem>
                       <ListGroupItem>Valido até 30/11/2019.</ListGroupItem>
-                      <ListGroupItem><Button variant="success">Quero alugar!</Button></ListGroupItem>
+                      <ListGroupItem><Button variant="outline-primary" onClick={this.handleShowModal}>Quero alugar!</Button></ListGroupItem>
                     </ListGroup>
                 </Card>
 
@@ -307,9 +268,9 @@ class ViewPage extends React.Component<Props, State> {
                         Preço da taxa de limpeza incluso.
                       </ListGroupItem>
                       <ListGroupItem>
-                        Preço válido para os dias 24/12/2019 a 03/01/2020.
+                        Preço válido para os dias 24/12/2019 á 03/01/2020.
                       </ListGroupItem>
-                      <ListGroupItem><Button variant="success">Quero alugar!</Button></ListGroupItem>
+                      <ListGroupItem><Button variant="outline-primary" onClick={this.handleShowModal}>Quero alugar!</Button></ListGroupItem>
                     </ListGroup>
                 </Card>
               </CardDeck>

@@ -1,11 +1,8 @@
 .jumbotron-container {
     background-image: 
-        url('../../../img/project-preview2.jpg'), 
-        url('../../../img/project-preview3.jpg'),
-        url('../../../img/project-preview1.jpg');
+        url('../../../assets/img/background-chairs.jpg');
     background-repeat: no-repeat;
-    background-position: center left, center, center right;
-    background-size: contain, contain, contain;
+    background-size: cover
 }
 
 .title {
