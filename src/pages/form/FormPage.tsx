@@ -1,6 +1,5 @@
 import React from 'react';
 import { Form, Col, Button, Container } from 'react-bootstrap';
-import { save } from '../../services/FormService';
 import { History } from 'history'
 
 type Props = {
@@ -49,7 +48,6 @@ class FormPage extends React.Component<Props, State> {
 
     this.setState({ loading: true })
     
-    await save(this.state.name, this.state.lastName, this.state.email, this.state.password, this.state.cnpjcpf, this.state.adressName, this.state.number, this.state.aditionalAdress, this.state.city, this.state.state, this.state.zipCode);
     return this.props.history.goBack();
   }
 

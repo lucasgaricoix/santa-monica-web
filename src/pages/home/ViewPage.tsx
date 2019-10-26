@@ -26,8 +26,8 @@ import {
 import styled from "styled-components";
 import "react-datepicker/dist/react-datepicker.css";
 import './style/viewpage.css'
-import { addDays } from "date-fns";
-import ModalForm from '../../components/Modal';
+import ModalForm from '../../components/ModalForm';
+import { load } from "../../services/BookService";
 
 registerLocale("pt-BR", ptBR);
 
@@ -53,31 +53,42 @@ const MapButton = styled(Button)`
 type Props = {};
 
 type State = {
-  currentImage: number;
+  loading: boolean;  
   showMap: boolean;
-  startDate: Date;
+  bookDate: Date;
   available: Date;
   showModal: boolean;
+  bookings: [];
 };
 
 class ViewPage extends React.Component<Props, State> {
   state: State = {
-    currentImage: 0,
+    loading: false,
     showMap: false,
-    startDate: new Date(),
+    bookDate: new Date(),
     available: new Date(),
-    showModal: false
+    showModal: false,
+    bookings: []
   };
 
-  onSubmitForm = () => {};
+  componentDidMount() {
+    load().then((response) => {
+      this.setState({ loading: true})
+      this.setState({ bookings: response.data })
+    })
+    .catch(error => {
+      console.log('Erro na requisição: ', error)
+    })
+    .finally(() => this.setState({ loading: false }))
+  }
 
   toggleMap = () => {
     this.setState({ showMap: true });
   };
 
-  setStartDate = (date?: Date | null, type?: string) => {
+  setBookDate = (date?: Date | null, type?: string) => {
     if (date && type === "start") {
-      this.setState({ startDate: date });
+      this.setState({ bookDate: date });
     }
     if (date && type === "available") {
       this.setState({ available: date });
@@ -88,25 +99,33 @@ class ViewPage extends React.Component<Props, State> {
     this.setState({ showModal: !this.state.showModal})
   }
 
+  getExcludeDates = () => {
+    return this.state.bookings.map((book: any) => new Date(book.bookDate))
+  }
+
   render() {
-    const { showMap, startDate, showModal } = this.state;
+    const { showMap, bookDate, showModal, bookings } = this.state;
+    console.log('map', bookings.map((book: any) => new Date(book.bookDate)))
     return (    
       <>
         <Jumbotron className="jumbotron-container">
           <h1 className="title">Alugue hoje para sua festa</h1>
           <h2 className="title">Sua diversão começa aqui</h2>
 
-          <ModalForm handleShowModal={this.handleShowModal} showModal={showModal}/>
+          <ModalForm
+            handleShowModal={this.handleShowModal}
+            showModal={showModal}
+          />
 
           <Form className="form-input-date" inline>
             <Form.Group>
               <Form.Label column>Disponibilidade</Form.Label>
               <DatePicker
                 className="form-control"
-                selectsStart
-                selected={startDate}
+                selected={bookDate}
+                excludeDates={this.getExcludeDates()}
                 minDate={new Date()}
-                onChange={date => this.setStartDate(date, "start")}
+                onChange={date => this.setBookDate(date, "start")}
                 dateFormat="dd/MM/yyyy"
                 locale="pt-BR"
               />
@@ -130,7 +149,6 @@ class ViewPage extends React.Component<Props, State> {
             <Button
               className="button-submit-date"
               type="submit"
-              onClick={this.onSubmitForm}
               href="#availability"
               >
                 Pesquisar
@@ -216,13 +234,10 @@ class ViewPage extends React.Component<Props, State> {
               <SectionTitle>Disponibilidade</SectionTitle>
               <DatePicker
                 selected={this.state.available}
-                minDate={startDate}
-                onChange={date => this.setStartDate(date, "available")}
-                monthsShown={3}
-                excludeDates={[
-                  addDays(new Date(), 14),
-                  addDays(new Date(), 15)
-                ]}
+                minDate={bookDate}
+                onChange={date => this.setBookDate(date, "available")}
+                monthsShown={2}
+                excludeDates={this.getExcludeDates()}
                 locale="pt-BR"
                 inline
               />
