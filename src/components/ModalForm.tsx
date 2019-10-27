@@ -1,10 +1,12 @@
 import React from 'react';
 import { Button, Modal, Form, Col } from 'react-bootstrap';
 import { save } from '../services/BookService';
+import styled from "styled-components";
 
 type Props = {
   showModal: boolean,
   handleShowModal(): void
+  bookDate: Date
 }
 
 type State = {
@@ -12,7 +14,7 @@ type State = {
   lastName: string,
   email: string,
   phoneNumber: string,
-  bookDate: string,
+  bookDate: Date,
   coolMessage: string,
 }
 
@@ -22,13 +24,24 @@ class ModalForm extends React.Component<Props, State> {
     lastName: '',    
     email: '',
     phoneNumber: '',
-    bookDate: '',
+    bookDate: this.props.bookDate,
     coolMessage: ''
   }
 
   handleChange = (event: any) => {
     event.preventDefault()
     this.setState({ [event.target.name]: event.target.value } as State)
+  }
+
+  dateFormat(date: Date) {
+    var day = new Date(date).getDate().toString();
+    var month = new Date(date).getMonth() + 1;
+    var year = new Date(date).getFullYear();
+
+    var dayFormatted = day.length === 1 ? '0' + day : day;
+
+    const fullDate = `${year}-${month}-${dayFormatted}`;
+    return fullDate;
   }
 
   onSubmitForm = async (event: any) => {
@@ -48,7 +61,7 @@ class ModalForm extends React.Component<Props, State> {
 
   render() {
     const { showModal, handleShowModal } = this.props;
-    const { name, lastName, email, phoneNumber, bookDate, coolMessage } = this.state;
+    const { name, email, phoneNumber, bookDate, coolMessage } = this.state;
     return (
       <>
         <Modal show={showModal} onHide={handleShowModal}>
@@ -57,31 +70,22 @@ class ModalForm extends React.Component<Props, State> {
           </Modal.Header>
           <Modal.Body>
             <p>Por favor, preencha este formulário, em breve nós vamos entrar em contato para confirmar a reserva.</p>
+            <p>Reserva para o dia <Bold>{bookDate.toLocaleDateString()}</Bold></p>
+
             <Form onSubmit={this.onSubmitForm}>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridName">
-                  <Form.Label>Nome</Form.Label>
                   <Form.Control
                     name="name"
-                    placeholder="Seu nome"
+                    placeholder="Seu nome completo"
                     onChange={this.handleChange}
                     value={name}
-                  />
-                </Form.Group>
-                <Form.Group as={Col} controlId="formGridLastName">
-                  <Form.Label>Sobrenome</Form.Label>
-                  <Form.Control
-                    name="lastName"
-                    placeholder="Sobrenome"
-                    onChange={this.handleChange}
-                    value={lastName}
                   />
                 </Form.Group>
               </Form.Row>
 
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridEmail">
-                  <Form.Label>Email</Form.Label>
                     <Form.Control
                       name="email"
                       type="email"
@@ -92,11 +96,10 @@ class ModalForm extends React.Component<Props, State> {
                 </Form.Group>
 
                 <Form.Group as={Col} controlId="formGridPhone">
-                  <Form.Label>Email</Form.Label>
                     <Form.Control
                       name="phoneNumber"
                       type="text"
-                      placeholder="(44) 9 965-4321"
+                      placeholder="Telefone: (44) 9 965-4321"
                       onChange={this.handleChange}
                       value={phoneNumber}
                     />
@@ -104,20 +107,7 @@ class ModalForm extends React.Component<Props, State> {
             </Form.Row>
 
             <Form.Row>
-                <Form.Group as={Col} controlId="formGridBook">
-                  <Form.Label>Email</Form.Label>
-                    <Form.Control
-                      name="bookDate"
-                      type="date"                      
-                      onChange={this.handleChange}
-                      value={bookDate}
-                    />
-                </Form.Group>
-            </Form.Row>
-
-            <Form.Row>
                 <Form.Group as={Col} controlId="formMessage">
-                  <Form.Label>Mensagem</Form.Label>
                     <Form.Control
                       as="textarea"
                       name="coolMessage"
@@ -144,4 +134,7 @@ class ModalForm extends React.Component<Props, State> {
   };
 };
 
-  export default ModalForm;
+const Bold = styled.span`
+  font-weight: bold;
+`
+export default ModalForm;

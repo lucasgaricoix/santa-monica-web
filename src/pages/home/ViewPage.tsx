@@ -8,7 +8,6 @@ import {
   Row,
   ListGroup,
   Button,
-  CardDeck,
   ListGroupItem
 } from "react-bootstrap";
 import DatePicker, { registerLocale } from "react-datepicker";
@@ -24,39 +23,25 @@ import {
   faChair
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
-import "react-datepicker/dist/react-datepicker.css";
-import './style/viewpage.css'
 import ModalForm from '../../components/ModalForm';
 import { load } from "../../services/BookService";
 
+//css
+import "react-datepicker/dist/react-datepicker.css";
+import './style/viewpage.css'
+
 registerLocale("pt-BR", ptBR);
 
-const SectionContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-const Section = styled.section`
-  align-items: flex-start;
-  margin-top: 25px;
-`;
-const SectionTitle = styled.h4`
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-`;
-
-const MapButton = styled(Button)`
-  margin-bottom: 15px;
-`;
+const WEEKDAY_PRICE = '350';
+const WEEKEND_PRICE = '650';
+const HOLIDAY_PRICE = '1500';
 
 type Props = {};
 
 type State = {
-  loading: boolean;  
+  loading: boolean;
   showMap: boolean;
   bookDate: Date;
-  available: Date;
   showModal: boolean;
   bookings: [];
 };
@@ -66,47 +51,70 @@ class ViewPage extends React.Component<Props, State> {
     loading: false,
     showMap: false,
     bookDate: new Date(),
-    available: new Date(),
     showModal: false,
     bookings: []
   };
 
   componentDidMount() {
     load().then((response) => {
-      this.setState({ loading: true})
+      this.setState({ loading: true })
       this.setState({ bookings: response.data })
     })
-    .catch(error => {
-      console.log('Erro na requisição: ', error)
-    })
-    .finally(() => this.setState({ loading: false }))
+      .catch(error => {
+        console.log('Erro na requisição: ', error)
+      })
+      .finally(() => this.setState({ loading: false }))
   }
 
   toggleMap = () => {
     this.setState({ showMap: true });
   };
 
-  setBookDate = (date?: Date | null, type?: string) => {
-    if (date && type === "start") {
-      this.setState({ bookDate: date });
-    }
-    if (date && type === "available") {
-      this.setState({ available: date });
+  setBookDate = (date: Date) => {
+    if (this.state.bookDate) {
+      this.setState({ bookDate: date })
     }
   };
 
   handleShowModal = () => {
-    this.setState({ showModal: !this.state.showModal})
+    this.setState({ showModal: !this.state.showModal })
   }
 
   getExcludeDates = () => {
     return this.state.bookings.map((book: any) => new Date(book.bookDate))
   }
 
+  getBookingPrice() {
+    const { bookDate } = this.state;
+    const day = bookDate.getDay();
+    if (day !== 0 && day !== 6) {
+      return (
+        <div>
+          <p>Durante a semana</p>
+          <p>{`R$${WEEKDAY_PRICE}`}</p>
+        </div>
+      )
+    } else if (day === 0 || day === 6) {
+      return (
+        <div>
+          <p>Finais de semana</p>
+          <p>{`R$${WEEKEND_PRICE}`}</p>
+        </div>
+      )
+    }
+    else {
+      return (
+      <div>
+        <p>Feriados e Natal</p>
+        <p>{`R$${HOLIDAY_PRICE}`}</p>
+      </div>
+      )
+    }
+  }
+
   render() {
-    const { showMap, bookDate, showModal, bookings } = this.state;
-    console.log('map', bookings.map((book: any) => new Date(book.bookDate)))
-    return (    
+    const { showMap, bookDate, showModal } = this.state;
+    return (
       <>
         <Jumbotron className="jumbotron-container">
           <h1 className="title">Alugue hoje para sua festa</h1>
@@ -115,6 +123,7 @@ class ViewPage extends React.Component<Props, State> {
           <ModalForm
             handleShowModal={this.handleShowModal}
             showModal={showModal}
+            bookDate={bookDate}            
           />
 
           <Form className="form-input-date" inline>
@@ -125,33 +134,17 @@ class ViewPage extends React.Component<Props, State> {
                 selected={bookDate}
                 excludeDates={this.getExcludeDates()}
                 minDate={new Date()}
-                onChange={date => this.setBookDate(date, "start")}
+                onChange={date => date && this.setBookDate(date)}
                 dateFormat="dd/MM/yyyy"
                 locale="pt-BR"
               />
             </Form.Group>
-            {/* <Form.Group>
-              <Form.Label column>Saída</Form.Label>
-              <DatePicker
-                className="form-control"
-                selectsEnd
-                selected={endDate}
-                startDate={startDate}
-                endDate={endDate}
-                minDate={startDate}
-                maxDate={addDays(startDate, 5)}
-                onChange={date => this.setStartDate(date, "end")}
-                placeholderText="Permitido apenas 5 dias de reserva."
-                dateFormat="dd/MM/yyyy"                
-                locale="pt-BR"
-              />
-            </Form.Group> */}
             <Button
               className="button-submit-date"
               type="submit"
               href="#availability"
-              >
-                Pesquisar
+            >
+              Pesquisar
             </Button>
           </Form>
         </Jumbotron>
@@ -185,9 +178,9 @@ class ViewPage extends React.Component<Props, State> {
             </Col>
           </Row>
 
-          <SectionContainer>
+          <div>
             <Section id="place-details" className="place-details">
-            <SectionTitle>Detalhes do espaço</SectionTitle>
+              <SectionTitle>Detalhes do espaço</SectionTitle>
               <Row>
                 <Col>
                   <ListGroup className="list-group-flush">
@@ -230,65 +223,37 @@ class ViewPage extends React.Component<Props, State> {
               </Row>
             </Section>
 
-            <Section id="availability">
+            <Section id="availability" className="section-datepicker-inline">
               <SectionTitle>Disponibilidade</SectionTitle>
-              <DatePicker
-                selected={this.state.available}
-                minDate={bookDate}
-                onChange={date => this.setBookDate(date, "available")}
-                monthsShown={2}
-                excludeDates={this.getExcludeDates()}
-                locale="pt-BR"
-                inline
-              />
-            </Section>
-
-            <Section id="section-price">
-              <SectionTitle>Preço</SectionTitle>
-              <CardDeck>
-                <Card border="info">
-                  <Card.Header>Segunda à Sexta</Card.Header>
-                  <Card.Body>
-                    <Card.Title>R$350</Card.Title>
-                  </Card.Body>
+              <Row>
+                <Col>
+                  <DatePicker
+                    className="datepicker-available"
+                    selected={this.state.bookDate}
+                    minDate={new Date()}
+                    onChange={date => date && this.setBookDate(date)}
+                    monthsShown={2}
+                    excludeDates={this.getExcludeDates()}
+                    locale="pt-BR"
+                    inline
+                  />
+                </Col>
+                <Col>
+                  <Card border="info">
+                    <Card.Header>{`Data da reserva: `}<Bold>{bookDate.toLocaleDateString()}</Bold></Card.Header>
+                    <Card.Body>
+                      <Card.Title>{this.getBookingPrice()}</Card.Title>
+                    </Card.Body>
                     <ListGroup className="list-group-flush">
                       <ListGroupItem>
                         Preço da taxa de limpeza incluso.
-                      </ListGroupItem>
-                      <ListGroupItem>Valido até 30/11/2019.</ListGroupItem>                      
-                    <ListGroupItem><Button variant="outline-primary" onClick={this.handleShowModal}>Quero alugar!</Button></ListGroupItem>
-                    </ListGroup>
-                </Card>
-                <Card border="primary">
-                  <Card.Header>Finais de semanas</Card.Header>
-                  <Card.Body>
-                    <Card.Title>R$650</Card.Title>
-                  </Card.Body>
-                    <ListGroup className="list-group-flush">
-                      <ListGroupItem>
-                        Preço da taxa de limpeza incluso.
-                      </ListGroupItem>
+                    </ListGroupItem>
                       <ListGroupItem>Valido até 30/11/2019.</ListGroupItem>
                       <ListGroupItem><Button variant="outline-primary" onClick={this.handleShowModal}>Quero alugar!</Button></ListGroupItem>
                     </ListGroup>
-                </Card>
-
-                <Card border="success">
-                  <Card.Header>Natal e Ano Novo</Card.Header>
-                  <Card.Body>
-                    <Card.Title>R$1500</Card.Title>
-                  </Card.Body>
-                    <ListGroup className="list-group-flush">
-                      <ListGroupItem>
-                        Preço da taxa de limpeza incluso.
-                      </ListGroupItem>
-                      <ListGroupItem>
-                        Preço válido para os dias 24/12/2019 á 03/01/2020.
-                      </ListGroupItem>
-                      <ListGroupItem><Button variant="outline-primary" onClick={this.handleShowModal}>Quero alugar!</Button></ListGroupItem>
-                    </ListGroup>
-                </Card>
-              </CardDeck>
+                  </Card>
+                </Col>
+              </Row>
             </Section>
 
             <Section>
@@ -307,11 +272,27 @@ class ViewPage extends React.Component<Props, State> {
                 </div>
               )}
             </Section>
-          </SectionContainer>
+          </div>
         </Container>
       </>
     );
   }
 }
+
+const Section = styled.section`
+  margin-top: 25px;
+`;
+const SectionTitle = styled.h4`
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+`;
+
+const MapButton = styled(Button)`
+  margin-bottom: 15px;
+`;
+
+const Bold = styled.span`
+  font-weight: bold;
+`
 
 export default ViewPage;
