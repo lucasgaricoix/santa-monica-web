@@ -11,7 +11,6 @@ type Props = {
 
 type State = {
   name: string,
-  lastName: string,
   email: string,
   phoneNumber: string,
   bookDate: Date,
@@ -21,7 +20,6 @@ type State = {
 class ModalForm extends React.Component<Props, State> {
   state: State = {
     name: '',
-    lastName: '',    
     email: '',
     phoneNumber: '',
     bookDate: this.props.bookDate,
@@ -50,7 +48,6 @@ class ModalForm extends React.Component<Props, State> {
     
     const data = {
       name: this.state.name,
-      lastName: this.state.lastName,
       email: this.state.email,
       bookDate: this.state.bookDate,
       coolMessage: this.state.coolMessage
