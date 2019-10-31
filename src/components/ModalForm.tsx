@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Modal, Form, Col } from 'react-bootstrap';
 import { save } from '../services/BookService';
 import styled from "styled-components";
+import emailjs from 'emailjs-com';
 
 type Props = {
   showModal: boolean,
@@ -49,11 +50,25 @@ class ModalForm extends React.Component<Props, State> {
     const data = {
       name: this.state.name,
       email: this.state.email,
+      phoneNumber: this.state.phoneNumber,
       bookDate: this.state.bookDate,
       coolMessage: this.state.coolMessage
     }
 
     await save(data)
+    this.sendEmail(data)
+  }
+
+  sendEmail = (data: any) => {
+    const dataForEmail = {
+      ...data,
+      bookDate: this.state.bookDate.toLocaleDateString()
+    }
+    var serviceId = "default_service";
+    var templateId = "template_UWnJeiK1";
+    var userId = 'user_XhZ3EgneE436yrUMQ6vdF'
+    emailjs.send(serviceId, templateId, dataForEmail, userId)
+      .catch(error => console.log('Erro ao enviar e-mail.', error))
   }
 
   render() {

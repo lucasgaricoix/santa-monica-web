@@ -35,3 +35,17 @@
     font-weight: 600;
     font-size: 20px;
 }
+
+.page-footer {
+    display: flex;
+    background-color: rgba(52, 58, 64);
+    color: #fff;    
+}
+
+.title-text {
+    margin-top: 10px;
+}
+
+.footer-copyright {
+    margin-top: 25px;
+}

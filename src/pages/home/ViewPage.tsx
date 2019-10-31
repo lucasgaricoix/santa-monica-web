@@ -25,6 +25,7 @@ import {
 import styled from "styled-components";
 import ModalForm from '../../components/ModalForm';
 import { load } from "../../services/BookService";
+import { Book } from '../../types/Book'
 
 //css
 import "react-datepicker/dist/react-datepicker.css";
@@ -43,7 +44,7 @@ type State = {
   showMap: boolean;
   bookDate: Date;
   showModal: boolean;
-  bookings: [];
+  bookings: Book[];
 };
 
 class ViewPage extends React.Component<Props, State> {
@@ -57,13 +58,14 @@ class ViewPage extends React.Component<Props, State> {
 
   componentDidMount() {
     load().then((response) => {
-      this.setState({ loading: true })
-      this.setState({ bookings: response.data })
+      this.setState({ loading: true, bookings: response.data })
     })
       .catch(error => {
         console.log('Erro na requisição: ', error)
       })
-      .finally(() => this.setState({ loading: false }))
+      .finally(() => {
+        this.setState({ loading: false })
+      })
   }
 
   toggleMap = () => {
@@ -81,7 +83,9 @@ class ViewPage extends React.Component<Props, State> {
   }
 
   getExcludeDates = () => {
-    return this.state.bookings.map((book: any) => new Date(book.bookDate))
+    return this.state.bookings
+      .filter((book: Book) => book.isConfirmed === true)
+      .map((book: Book) => new Date(book.bookDate))
   }
 
   getBookingPrice() {
@@ -104,10 +108,10 @@ class ViewPage extends React.Component<Props, State> {
     }
     else {
       return (
-      <div>
-        <p>Feriados e Natal</p>
-        <p>{`R$${HOLIDAY_PRICE}`}</p>
-      </div>
+        <div>
+          <p>Feriados e Natal</p>
+          <p>{`R$${HOLIDAY_PRICE}`}</p>
+        </div>
       )
     }
   }
@@ -123,7 +127,7 @@ class ViewPage extends React.Component<Props, State> {
           <ModalForm
             handleShowModal={this.handleShowModal}
             showModal={showModal}
-            bookDate={bookDate}            
+            bookDate={bookDate}
           />
 
           <Form className="form-input-date" inline>
@@ -274,6 +278,15 @@ class ViewPage extends React.Component<Props, State> {
             </Section>
           </div>
         </Container>
+        <footer className="page-footer">
+          <Container>
+            <h5 className="title-text">Espaço Santa Mônica</h5>
+            <p>Contato para informações: (44) 99713-3894</p>
+          <div className="footer-copyright">
+              © 2019 Santa Mônica
+              </div>
+          </Container>
+        </footer>        
       </>
     );
   }
