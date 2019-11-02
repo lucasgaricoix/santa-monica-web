@@ -56,7 +56,9 @@ class ModalForm extends React.Component<Props, State> {
     }
 
     await save(data)
-    this.sendEmail(data)
+      .then(() => alert('Formulário enviado com sucesso.'))
+      .catch(error => console.log('Falha no envio do formulário', error))
+      .finally(() => this.sendEmail(data))
   }
 
   sendEmail = (data: any) => {
