@@ -4,7 +4,7 @@ import './style/header.css'
 import logo from '../../assets/img/logo-santa-monica.jpg'
 
 const Header: React.FC = () => {
-  const [width, setWidth] = useState(0);
+  const [width, setWidth] = useState(window.innerWidth);
 
   function handleWindowSizeChange() {
     setWidth(window.innerWidth);
@@ -12,15 +12,9 @@ const Header: React.FC = () => {
   
   useEffect(() => {
     window.addEventListener('resize', handleWindowSizeChange);
-  },[width])
-  
-  const isMobile = width && width <= 500;
+  })
 
-  if (isMobile) {
-    return <Mobile />
-  } else {
-    return <Desktop />
-  }
+  return width <= 550 ? <Mobile /> : <Desktop />
 
   function Mobile() {
     return (
