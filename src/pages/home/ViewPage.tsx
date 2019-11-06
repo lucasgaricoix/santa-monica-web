@@ -243,7 +243,7 @@ class ViewPage extends React.Component<Props, State> {
                   />
                 </Col>
                 <Col>
-                  <Card border="info">
+                  <Card id="section-price" border="info">
                     <Card.Header>{`Data da reserva: `}<Bold>{bookDate.toLocaleDateString()}</Bold></Card.Header>
                     <Card.Body>
                       <Card.Title>{this.getBookingPrice()}</Card.Title>
@@ -253,7 +253,9 @@ class ViewPage extends React.Component<Props, State> {
                         Preço da taxa de limpeza incluso.
                     </ListGroupItem>
                       <ListGroupItem>Valido até 30/11/2019.</ListGroupItem>
-                      <ListGroupItem><Button variant="outline-primary" onClick={this.handleShowModal}>Quero alugar!</Button></ListGroupItem>
+                      <ListGroupItem>
+                        <Button variant="outline-primary" onClick={this.handleShowModal}>Quero reservar!</Button>
+                      </ListGroupItem>
                     </ListGroup>
                   </Card>
                 </Col>
