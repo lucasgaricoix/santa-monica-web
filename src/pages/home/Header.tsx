@@ -12,9 +12,9 @@ const Header: React.FC = () => {
   
   useEffect(() => {
     window.addEventListener('resize', handleWindowSizeChange);
-  },[])
+  },[width])
   
-  const isMobile = width <= 500;
+  const isMobile = width && width <= 500;
 
   if (isMobile) {
     return <Mobile />
