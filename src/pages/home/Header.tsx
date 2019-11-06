@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Navbar, Nav } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import './style/header.css'
 import logo from '../../assets/img/logo-santa-monica.jpg'
 
@@ -25,11 +25,15 @@ const Header: React.FC = () => {
   function Mobile() {
     return (
       <Navbar bg="dark" variant="dark">
-          <Navbar.Brand href="/">Espaço Santa Mônica</Navbar.Brand>
+          <Navbar.Brand className="navbar-brand-mobile" href="/">Espaço Santa Mônica</Navbar.Brand>
           <Nav className="mr-auto">
-            <Nav.Link className="description" href="#place-details">Descrição</Nav.Link>
-            <Nav.Link className="description" href="#availability">Disponibilidade</Nav.Link>
-            <Nav.Link className="description" href="#section-price">Preço</Nav.Link>
+            <NavDropdown title="Menu" id="nav-dropdown">
+              <NavDropdown.Item  eventKey="1" href="#place-details">Descrição</NavDropdown.Item>
+              <NavDropdown.Item  eventKey="2" href="#availability">Disponibilidade</NavDropdown.Item>
+              <NavDropdown.Item  eventKey="3" href="#section-price">Preço</NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item eventKey="4" href="/">Login</NavDropdown.Item>
+            </NavDropdown>
           </Nav>
         </Navbar>
     )
@@ -38,7 +42,7 @@ const Header: React.FC = () => {
   function Desktop() {
     return (
       <Navbar className="navbar-santa-monica" expand="lg" bg="dark" variant="dark">
-          <Navbar.Brand className="navbar-brand" href="/"><img 
+          <Navbar.Brand className="navbar-brand-desktop" href="/"><img 
               alt="santa-monica-logo"
               className="logo"
               src={logo}
@@ -46,12 +50,12 @@ const Header: React.FC = () => {
               height="50"
             />Espaço Santa Mônica</Navbar.Brand>
           <Nav className="mr-auto">
-            <Nav.Link className="description" href="#place-details">Descrição</Nav.Link>
-            <Nav.Link className="description" href="#availability">Disponibilidade</Nav.Link>
-            <Nav.Link className="description" href="#section-price">Preço</Nav.Link>
+            <Nav.Link href="#place-details">Descrição</Nav.Link>
+            <Nav.Link href="#availability">Disponibilidade</Nav.Link>
+            <Nav.Link href="#availability">Preço</Nav.Link>
           </Nav>
           <Nav className="justify-content-end mr-4">
-            <Nav.Link className="description" href="/">Login</Nav.Link>
+            <Nav.Link href="/">Login</Nav.Link>
           </Nav>
         </Navbar>
     )
