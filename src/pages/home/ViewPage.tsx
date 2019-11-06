@@ -281,9 +281,15 @@ class ViewPage extends React.Component<Props, State> {
         <footer className="page-footer">
           <Container>
             <h5 className="title-text">Espaço Santa Mônica</h5>
-            <p>Contato para informações: (44) 99713-3894</p>
+            <ul>
+              <li>Contato para informações</li>
+              <ul>
+                <li>Gabriela: (44) 99178-9996</li>
+                <li>Ana Paula: (44) 99921-9315</li>
+              </ul>
+            </ul>
           <div className="footer-copyright">
-              © 2019 Santa Mônica
+              © 2019 Espaço Santa Mônica
               </div>
           </Container>
         </footer>        
