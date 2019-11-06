@@ -16,7 +16,7 @@
     flex-wrap: wrap;
     justify-content: flex-start;
     align-items: center;
-    height: 600px;
+    height: 500px;
 }
 
 .button-submit-date {
@@ -48,4 +48,8 @@
 
 .footer-copyright {
     margin-top: 25px;
+}
+
+ul {
+   list-style: none;
 }
