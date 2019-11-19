@@ -23,13 +23,13 @@ import {
   faChair
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
-import ModalForm from '../../components/ModalForm';
+import ModalForm from "../../components/ModalForm";
 import { load } from "../../services/BookService";
-import { Book } from '../../types/Book'
+import { Book } from "../../types/Book";
 
 //css
 import "react-datepicker/dist/react-datepicker.css";
-import './style/viewpage.css'
+import "./style/viewpage.css";
 
 registerLocale("pt-BR", ptBR);
 
@@ -38,11 +38,11 @@ const WEEKEND_PRICE = 800;
 const WEEKDAY_PRICE = 600;
 
 const HOLIDAYS = [
-  new Date('2019-12-24 03:00:00'),
-  new Date('2019-12-25 03:00:00'),
-  new Date('2019-12-31 03:00:00'),
-  new Date('2019-01-01 03:00:00')
-]
+  new Date("2019-12-24 03:00:00"),
+  new Date("2019-12-25 03:00:00"),
+  new Date("2019-12-31 03:00:00"),
+  new Date("2019-01-01 03:00:00")
+];
 
 type Props = {};
 
@@ -66,15 +66,16 @@ class ViewPage extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    load().then((response) => {
-      this.setState({ loading: true, bookings: response.data })
-    })
+    load()
+      .then(response => {
+        this.setState({ loading: true, bookings: response.data });
+      })
       .catch(error => {
-        console.log('Erro na requisição: ', error)
+        console.log("Erro na requisição: ", error);
       })
       .finally(() => {
-        this.setState({ loading: false })
-      })
+        this.setState({ loading: false });
+      });
   }
 
   toggleMap = () => {
@@ -83,56 +84,60 @@ class ViewPage extends React.Component<Props, State> {
 
   getPrices = (date: Date) => {
     const day = date.getDay();
-    const holiday = HOLIDAYS.filter(filterDate => filterDate.getMonth() === date.getMonth() && filterDate.getDate() === date.getDate());
+    const holiday = HOLIDAYS.filter(
+      filterDate =>
+        filterDate.getMonth() === date.getMonth() &&
+        filterDate.getDate() === date.getDate()
+    );
 
-      if (holiday.length > 0) {
-        return this.setState({ price: HOLIDAY_PRICE})
-      }
+    if (holiday.length > 0) {
+      return this.setState({ price: HOLIDAY_PRICE });
+    }
 
-      if (day === 0 || day === 5 || day === 6) {
-        return this.setState({ price: WEEKEND_PRICE })
-      }
+    if (day === 0 || day === 5 || day === 6) {
+      return this.setState({ price: WEEKEND_PRICE });
+    }
 
-      if (day !== 0 && day !== 5 && day !== 6) {
-        return this.setState({ price: WEEKDAY_PRICE})
-      }
+    if (day !== 0 && day !== 5 && day !== 6) {
+      return this.setState({ price: WEEKDAY_PRICE });
+    }
   };
 
   handleShowModal = () => {
-    this.setState({ showModal: !this.state.showModal })
-  }
+    this.setState({ showModal: !this.state.showModal });
+  };
 
   getExcludeDates = () => {
     return this.state.bookings
       .filter((book: Book) => book.isConfirmed === true)
-      .map((book: Book) => new Date(book.bookDate))
-  }
+      .map((book: Book) => new Date(book.bookDate));
+  };
 
   getBookingPrice() {
     const { price } = this.state;
 
-    switch(price) {
+    switch (price) {
       case HOLIDAY_PRICE:
         return (
           <div>
             <p>Feriados e datas comemorativas</p>
             <p>R${price},00</p>
           </div>
-        )
+        );
       case WEEKDAY_PRICE:
         return (
           <div>
             <p>Durante a semana</p>
             <p>R${price},00</p>
           </div>
-        )
+        );
       case WEEKEND_PRICE:
         return (
           <div>
             <p>Finais de semana</p>
             <p>R${price},00</p>
           </div>
-        )
+        );
     }
   }
 
@@ -160,7 +165,7 @@ class ViewPage extends React.Component<Props, State> {
                 onSelect={date => this.getPrices(date)}
                 excludeDates={this.getExcludeDates()}
                 minDate={new Date()}
-                onChange={date => date && this.setState({bookDate: date})}
+                onChange={date => date && this.setState({ bookDate: date })}
                 dateFormat="dd/MM/yyyy"
                 locale="pt-BR"
               />
@@ -242,8 +247,14 @@ class ViewPage extends React.Component<Props, State> {
                       <FontAwesomeIcon icon={faUtensils} />{" "}
                       {" Freezer e geladeira."}
                     </ListGroup.Item>
-                    <ListGroup.Item><FontAwesomeIcon icon={faUtensils} />{" "}{"Forno Industrial."}</ListGroup.Item>
-                    <ListGroup.Item><FontAwesomeIcon icon={faChair} />{" Cadeiras espreguiçadeira"}</ListGroup.Item>
+                    <ListGroup.Item>
+                      <FontAwesomeIcon icon={faUtensils} />{" "}
+                      {"Forno Industrial."}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      <FontAwesomeIcon icon={faChair} />
+                      {" Cadeiras espreguiçadeira"}
+                    </ListGroup.Item>
                   </ListGroup>
                 </Col>
               </Row>
@@ -258,7 +269,7 @@ class ViewPage extends React.Component<Props, State> {
                     selected={this.state.bookDate}
                     onSelect={date => this.getPrices(date)}
                     minDate={new Date()}
-                    onChange={date => date && this.setState({bookDate: date})}
+                    onChange={date => date && this.setState({ bookDate: date })}
                     monthsShown={2}
                     excludeDates={this.getExcludeDates()}
                     locale="pt-BR"
@@ -267,17 +278,25 @@ class ViewPage extends React.Component<Props, State> {
                 </Col>
                 <Col>
                   <Card id="section-price" border="info">
-                    <Card.Header>{`Data da reserva: `}<Bold>{bookDate.toLocaleDateString()}</Bold></Card.Header>
+                    <Card.Header>
+                      {`Data da reserva: `}
+                      <Bold>{bookDate.toLocaleDateString()}</Bold>
+                    </Card.Header>
                     <Card.Body>
                       <Card.Title>{this.getBookingPrice()}</Card.Title>
                     </Card.Body>
                     <ListGroup className="list-group-flush">
                       <ListGroupItem>
                         Preço da taxa de limpeza incluso.
-                    </ListGroupItem>
+                      </ListGroupItem>
                       <ListGroupItem>Valido até 30/11/2019.</ListGroupItem>
                       <ListGroupItem>
-                        <Button variant="outline-primary" onClick={this.handleShowModal}>Quero reservar!</Button>
+                        <Button
+                          variant="outline-primary"
+                          onClick={this.handleShowModal}
+                        >
+                          Quero reservar!
+                        </Button>
                       </ListGroupItem>
                     </ListGroup>
                   </Card>
@@ -305,19 +324,28 @@ class ViewPage extends React.Component<Props, State> {
         </Container>
         <footer className="page-footer">
           <Container>
-            <h5 className="title-text">Espaço Santa Mônica</h5>
-            <ul>
-              <li>Contato para informações</li>
-              <ul>
-                <li>Gabriela: (44) 99178-9996</li>
-                <li>Ana Paula: (44) 99921-9315</li>
-              </ul>
-            </ul>
-          <div className="footer-copyright">
-              © 2019 Espaço Santa Mônica
-              </div>
+            <Col>
+              <Row>
+                <h5 className="title-text">Espaço Santa Mônica</h5>
+              </Row>
+              <Row>
+                <ul>
+                  <li>Contato para informações</li>
+                  <ul>
+                    <ContactPerson>Gabriela: (44) 99178-9996</ContactPerson>
+                    <ContactPerson>Ana Paula: (44) 99921-9315</ContactPerson>
+                  </ul>
+                </ul>
+              </Row>
+
+              <Row>
+                <div className="footer-copyright">
+                  © 2019 Espaço Santa Mônica
+                </div>
+              </Row>
+            </Col>
           </Container>
-        </footer>        
+        </footer>
       </>
     );
   }
@@ -337,6 +365,10 @@ const MapButton = styled(Button)`
 
 const Bold = styled.span`
   font-weight: bold;
+`;
+
+const ContactPerson = styled.li`
+  font-size: 12px;
 `
 
 export default ViewPage;
