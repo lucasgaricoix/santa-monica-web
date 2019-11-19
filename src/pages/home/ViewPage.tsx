@@ -98,7 +98,7 @@ class ViewPage extends React.Component<Props, State> {
       return this.setState({ price: WEEKEND_PRICE });
     }
 
-    if (day !== 0 && day !== 5 && day !== 6) {
+    if (day !== 0 && day !== 5 && day !== 6 && holiday.length === 0) {
       return this.setState({ price: WEEKDAY_PRICE });
     }
   };
