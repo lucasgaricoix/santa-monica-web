@@ -38,10 +38,10 @@ const WEEKEND_PRICE = 800;
 const WEEKDAY_PRICE = 600;
 
 const HOLIDAYS = [
-  new Date("2019-12-24 03:00:00"),
-  new Date("2019-12-25 03:00:00"),
-  new Date("2019-12-31 03:00:00"),
-  new Date("2019-01-01 03:00:00")
+  new Date("2019/12/24 03:00:00"),
+  new Date("2019/12/25 03:00:00"),
+  new Date("2019/12/31 03:00:00"),
+  new Date("2020/01/01 03:00:00")
 ];
 
 type Props = {};
@@ -61,7 +61,7 @@ class ViewPage extends React.Component<Props, State> {
     showMap: false,
     bookDate: new Date(),
     showModal: false,
-    price: 600,
+    price: 0,
     bookings: []
   };
 
@@ -74,6 +74,7 @@ class ViewPage extends React.Component<Props, State> {
         console.log("Erro na requisição: ", error);
       })
       .finally(() => {
+        this.setBookDateAndPrices(this.state.bookDate);
         this.setState({ loading: false });
       });
   }
@@ -82,13 +83,15 @@ class ViewPage extends React.Component<Props, State> {
     this.setState({ showMap: true });
   };
 
-  getPrices = (date: Date) => {
+  setBookDateAndPrices = (date: Date) => {
     const day = date.getDay();
     const holiday = HOLIDAYS.filter(
       filterDate =>
         filterDate.getMonth() === date.getMonth() &&
         filterDate.getDate() === date.getDate()
     );
+
+    this.setState({ bookDate: date });
 
     if (holiday.length > 0) {
       return this.setState({ price: HOLIDAY_PRICE });
@@ -138,6 +141,8 @@ class ViewPage extends React.Component<Props, State> {
             <p>R${price},00</p>
           </div>
         );
+      default:
+        return <div></div>;
     }
   }
 
@@ -162,10 +167,9 @@ class ViewPage extends React.Component<Props, State> {
               <DatePicker
                 className="form-control"
                 selected={bookDate}
-                onSelect={date => this.getPrices(date)}
                 excludeDates={this.getExcludeDates()}
                 minDate={new Date()}
-                onChange={date => date && this.setState({ bookDate: date })}
+                onChange={date => date && this.setBookDateAndPrices(date)}
                 dateFormat="dd/MM/yyyy"
                 locale="pt-BR"
               />
@@ -266,10 +270,9 @@ class ViewPage extends React.Component<Props, State> {
                 <Col>
                   <DatePicker
                     className="datepicker-available"
-                    selected={this.state.bookDate}
-                    onSelect={date => this.getPrices(date)}
+                    selected={bookDate}
                     minDate={new Date()}
-                    onChange={date => date && this.setState({ bookDate: date })}
+                    onChange={date => date && this.setBookDateAndPrices(date)}
                     monthsShown={2}
                     excludeDates={this.getExcludeDates()}
                     locale="pt-BR"
@@ -369,6 +372,6 @@ const Bold = styled.span`
 
 const ContactPerson = styled.li`
   font-size: 12px;
-`
+`;
 
 export default ViewPage;
