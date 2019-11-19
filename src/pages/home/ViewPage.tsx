@@ -33,9 +33,16 @@ import './style/viewpage.css'
 
 registerLocale("pt-BR", ptBR);
 
-const WEEKDAY_PRICE = '350';
-const WEEKEND_PRICE = '650';
-const HOLIDAY_PRICE = '1500';
+const HOLIDAY_PRICE = 1200;
+const WEEKEND_PRICE = 800;
+const WEEKDAY_PRICE = 600;
+
+const HOLIDAYS = [
+  new Date('2019-12-24 03:00:00'),
+  new Date('2019-12-25 03:00:00'),
+  new Date('2019-12-31 03:00:00'),
+  new Date('2019-01-01 03:00:00')
+]
 
 type Props = {};
 
@@ -44,6 +51,7 @@ type State = {
   showMap: boolean;
   bookDate: Date;
   showModal: boolean;
+  price: number;
   bookings: Book[];
 };
 
@@ -53,6 +61,7 @@ class ViewPage extends React.Component<Props, State> {
     showMap: false,
     bookDate: new Date(),
     showModal: false,
+    price: 600,
     bookings: []
   };
 
@@ -72,10 +81,21 @@ class ViewPage extends React.Component<Props, State> {
     this.setState({ showMap: true });
   };
 
-  setBookDate = (date: Date) => {
-    if (this.state.bookDate) {
-      this.setState({ bookDate: date })
-    }
+  getPrices = (date: Date) => {
+    const day = date.getDay();
+    const holiday = HOLIDAYS.filter(filterDate => filterDate.getMonth() === date.getMonth() && filterDate.getDate() === date.getDate());
+
+      if (holiday.length > 0) {
+        return this.setState({ price: HOLIDAY_PRICE})
+      }
+
+      if (day === 0 || day === 5 || day === 6) {
+        return this.setState({ price: WEEKEND_PRICE })
+      }
+
+      if (day !== 0 && day !== 5 && day !== 6) {
+        return this.setState({ price: WEEKDAY_PRICE})
+      }
   };
 
   handleShowModal = () => {
@@ -89,35 +109,35 @@ class ViewPage extends React.Component<Props, State> {
   }
 
   getBookingPrice() {
-    const { bookDate } = this.state;
-    const day = bookDate.getDay();
-    if (day !== 0 && day !== 6) {
-      return (
-        <div>
-          <p>Durante a semana</p>
-          <p>{`R$${WEEKDAY_PRICE}`}</p>
-        </div>
-      )
-    } else if (day === 0 || day === 6) {
-      return (
-        <div>
-          <p>Finais de semana</p>
-          <p>{`R$${WEEKEND_PRICE}`}</p>
-        </div>
-      )
-    }
-    else {
-      return (
-        <div>
-          <p>Feriados e Natal</p>
-          <p>{`R$${HOLIDAY_PRICE}`}</p>
-        </div>
-      )
+    const { price } = this.state;
+
+    switch(price) {
+      case HOLIDAY_PRICE:
+        return (
+          <div>
+            <p>Feriados e datas comemorativas</p>
+            <p>R${price},00</p>
+          </div>
+        )
+      case WEEKDAY_PRICE:
+        return (
+          <div>
+            <p>Durante a semana</p>
+            <p>R${price},00</p>
+          </div>
+        )
+      case WEEKEND_PRICE:
+        return (
+          <div>
+            <p>Finais de semana</p>
+            <p>R${price},00</p>
+          </div>
+        )
     }
   }
 
   render() {
-    const { showMap, bookDate, showModal } = this.state;
+    const { showMap, bookDate, showModal, price } = this.state;
     return (
       <>
         <Jumbotron className="jumbotron-container">
@@ -128,6 +148,7 @@ class ViewPage extends React.Component<Props, State> {
             handleShowModal={this.handleShowModal}
             showModal={showModal}
             bookDate={bookDate}
+            price={price}
           />
 
           <Form className="form-input-date" inline>
@@ -136,9 +157,10 @@ class ViewPage extends React.Component<Props, State> {
               <DatePicker
                 className="form-control"
                 selected={bookDate}
+                onSelect={date => this.getPrices(date)}
                 excludeDates={this.getExcludeDates()}
                 minDate={new Date()}
-                onChange={date => date && this.setBookDate(date)}
+                onChange={date => date && this.setState({bookDate: date})}
                 dateFormat="dd/MM/yyyy"
                 locale="pt-BR"
               />
@@ -234,8 +256,9 @@ class ViewPage extends React.Component<Props, State> {
                   <DatePicker
                     className="datepicker-available"
                     selected={this.state.bookDate}
+                    onSelect={date => this.getPrices(date)}
                     minDate={new Date()}
-                    onChange={date => date && this.setBookDate(date)}
+                    onChange={date => date && this.setState({bookDate: date})}
                     monthsShown={2}
                     excludeDates={this.getExcludeDates()}
                     locale="pt-BR"

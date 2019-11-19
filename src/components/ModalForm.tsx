@@ -5,16 +5,16 @@ import styled from "styled-components";
 import emailjs from 'emailjs-com';
 
 type Props = {
-  showModal: boolean,
-  handleShowModal(): void
-  bookDate: Date
+  showModal: boolean;
+  handleShowModal(): void;
+  bookDate: Date;
+  price: number;
 }
 
 type State = {
   name: string,
   email: string,
   phoneNumber: string,
-  bookDate: Date,
   coolMessage: string,
 }
 
@@ -23,7 +23,6 @@ class ModalForm extends React.Component<Props, State> {
     name: '',
     email: '',
     phoneNumber: '',
-    bookDate: this.props.bookDate,
     coolMessage: ''
   }
 
@@ -51,7 +50,7 @@ class ModalForm extends React.Component<Props, State> {
       name: this.state.name,
       email: this.state.email,
       phoneNumber: this.state.phoneNumber,
-      bookDate: this.state.bookDate,
+      bookDate: this.props.bookDate,
       coolMessage: this.state.coolMessage
     }
 
@@ -64,7 +63,7 @@ class ModalForm extends React.Component<Props, State> {
   sendEmail = (data: any) => {
     const dataForEmail = {
       ...data,
-      bookDate: this.state.bookDate.toLocaleDateString()
+      bookDate: this.props.bookDate.toLocaleDateString()
     }
     var serviceId = "default_service";
     var templateId = "template_UWnJeiK1";
@@ -74,8 +73,8 @@ class ModalForm extends React.Component<Props, State> {
   }
 
   render() {
-    const { showModal, handleShowModal } = this.props;
-    const { name, email, phoneNumber, bookDate, coolMessage } = this.state;
+    const { showModal, handleShowModal, bookDate } = this.props;
+    const { name, email, phoneNumber, coolMessage } = this.state;
     return (
       <>
         <Modal show={showModal} onHide={handleShowModal}>
@@ -85,6 +84,7 @@ class ModalForm extends React.Component<Props, State> {
           <Modal.Body>
             <p>Por favor, preencha este formulário, em breve nós vamos entrar em contato para confirmar a reserva.</p>
             <p>Reserva para o dia <Bold>{bookDate.toLocaleDateString()}</Bold></p>
+            <p>No valor de <Bold>R${this.props.price},00</Bold></p>
 
             <Form onSubmit={this.onSubmitForm}>
               <Form.Row>
