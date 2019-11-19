@@ -83,15 +83,15 @@ class ViewPage extends React.Component<Props, State> {
     this.setState({ showMap: true });
   };
 
-  setBookDateAndPrices = (date: Date) => {    
+  setBookDateAndPrices = (date: Date) => {
     const day = date.getDay();
     const holiday = HOLIDAYS.filter(
       filterDate =>
         filterDate.getMonth() === date.getMonth() &&
         filterDate.getDate() === date.getDate()
     );
-        
-    this.setState({ bookDate: date })
+
+    this.setState({ bookDate: date });
 
     if (holiday.length > 0) {
       return this.setState({ price: HOLIDAY_PRICE });
@@ -142,9 +142,7 @@ class ViewPage extends React.Component<Props, State> {
           </div>
         );
       default:
-        return (
-          <div></div>
-        )
+        return <div></div>;
     }
   }
 
@@ -374,6 +372,6 @@ const Bold = styled.span`
 
 const ContactPerson = styled.li`
   font-size: 12px;
-`
+`;
 
 export default ViewPage;
