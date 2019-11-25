@@ -8,7 +8,8 @@ import {
   Row,
   ListGroup,
   Button,
-  ListGroupItem
+  ListGroupItem,
+  Spinner
 } from "react-bootstrap";
 import DatePicker, { registerLocale } from "react-datepicker";
 import ptBR from "date-fns/locale/pt-BR";
@@ -48,7 +49,6 @@ type Props = {};
 
 type State = {
   loading: boolean;
-  showMap: boolean;
   bookDate: Date;
   showModal: boolean;
   price: number;
@@ -58,7 +58,6 @@ type State = {
 class ViewPage extends React.Component<Props, State> {
   state: State = {
     loading: false,
-    showMap: false,
     bookDate: new Date(),
     showModal: false,
     price: 0,
@@ -78,10 +77,6 @@ class ViewPage extends React.Component<Props, State> {
         this.setState({ loading: false });
       });
   }
-
-  toggleMap = () => {
-    this.setState({ showMap: true });
-  };
 
   setBookDateAndPrices = (date: Date) => {
     const day = date.getDay();
@@ -147,7 +142,7 @@ class ViewPage extends React.Component<Props, State> {
   }
 
   render() {
-    const { showMap, bookDate, showModal, price } = this.state;
+    const { loading, bookDate, showModal, price } = this.state;
     return (
       <>
         <Jumbotron className="jumbotron-container">
@@ -195,10 +190,7 @@ class ViewPage extends React.Component<Props, State> {
             </Col>
             <Col sm={3}>
               <h4>Garantia no pagamento</h4>
-              <p>
-                Pague com cartão em até 6x, sendo 50% no ato e o restante após a
-                festa.
-              </p>
+              <p>Pague apenas 50% no ato e o restante após a festa.</p>
             </Col>
             <Col sm={3}>
               <h4>Disponibilidade para Hospedagem</h4>
@@ -267,7 +259,12 @@ class ViewPage extends React.Component<Props, State> {
             <Section id="availability" className="section-datepicker-inline">
               <SectionTitle>Disponibilidade</SectionTitle>
               <Row>
-                <Col>
+                {loading ? (
+                  <Spinner animation="border" role="status">
+                  <span className="sr-only">Carregando...</span>
+                </Spinner>
+                ) : (
+                  <Col>
                   <DatePicker
                     className="datepicker-available"
                     selected={bookDate}
@@ -279,8 +276,14 @@ class ViewPage extends React.Component<Props, State> {
                     inline
                   />
                 </Col>
-                <Col>
-                  <Card id="section-price" border="info">
+                )}
+                <Col sm={5}>
+                  {loading ? (
+                    <Spinner animation="border" role="status">
+                    <span className="sr-only">Carregando...</span>
+                  </Spinner>
+                  ): (
+                    <Card id="section-price" border="info">
                     <Card.Header>
                       {`Data da reserva: `}
                       <Bold>{bookDate.toLocaleDateString()}</Bold>
@@ -292,7 +295,6 @@ class ViewPage extends React.Component<Props, State> {
                       <ListGroupItem>
                         Preço da taxa de limpeza incluso.
                       </ListGroupItem>
-                      <ListGroupItem>Valido até 30/11/2019.</ListGroupItem>
                       <ListGroupItem>
                         <Button
                           variant="outline-primary"
@@ -303,25 +305,23 @@ class ViewPage extends React.Component<Props, State> {
                       </ListGroupItem>
                     </ListGroup>
                   </Card>
+                  )}
                 </Col>
               </Row>
             </Section>
 
             <Section>
               <SectionTitle>Localização</SectionTitle>
-              <p>R. Guaratinga, 520 - Jardim dos Pássaros</p>
-              <MapButton onClick={this.toggleMap}>Expandir Mapa</MapButton>
-              {showMap && (
-                <div>
-                  <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d915.427233424145!2d-51.97698204130726!3d-23.398740832335065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ecd6885745f567%3A0xaac13ecaa32dda3d!2sR.%20Guaratinga%2C%20520%20-%20Jardim%20dos%20Passaros%2C%20Maring%C3%A1%20-%20PR%2C%2087075-240!5e0!3m2!1spt-BR!2sbr!4v1569817365041!5m2!1spt-BR!2sbr"
-                    width="800"
-                    height="450"
-                    style={{ border: 0 }}
-                    title="googleMaps"
-                  />
-                </div>
-              )}
+              <p>R. Guaratinga, 520c - Jardim dos Pássaros - Maringá-PR</p>
+              <div>
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d915.427233424145!2d-51.97698204130726!3d-23.398740832335065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ecd6885745f567%3A0xaac13ecaa32dda3d!2sR.%20Guaratinga%2C%20520%20-%20Jardim%20dos%20Passaros%2C%20Maring%C3%A1%20-%20PR%2C%2087075-240!5e0!3m2!1spt-BR!2sbr!4v1569817365041!5m2!1spt-BR!2sbr"
+                  width="800"
+                  height="450"
+                  style={{ border: 0 }}
+                  title="googleMaps"
+                />
+              </div>
             </Section>
           </div>
         </Container>
@@ -360,10 +360,6 @@ const Section = styled.section`
 const SectionTitle = styled.h4`
   padding-bottom: 8px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-`;
-
-const MapButton = styled(Button)`
-  margin-bottom: 15px;
 `;
 
 const Bold = styled.span`
