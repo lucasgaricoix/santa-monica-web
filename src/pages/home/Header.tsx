@@ -12,7 +12,7 @@ const Header: React.FC = () => {
   
   useEffect(() => {
     window.addEventListener('resize', handleWindowSizeChange);
-  })
+  }, [width])
 
   return width <= 550 ? <Mobile /> : <Desktop />
 
@@ -25,8 +25,6 @@ const Header: React.FC = () => {
               <NavDropdown.Item  eventKey="1" href="#place-details">Descrição</NavDropdown.Item>
               <NavDropdown.Item  eventKey="2" href="#availability">Disponibilidade</NavDropdown.Item>
               <NavDropdown.Item  eventKey="3" href="#section-price">Preço</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item eventKey="4" href="/">Login</NavDropdown.Item>
             </NavDropdown>
           </Nav>
         </Navbar>
@@ -47,9 +45,6 @@ const Header: React.FC = () => {
             <Nav.Link href="#place-details">Descrição</Nav.Link>
             <Nav.Link href="#availability">Disponibilidade</Nav.Link>
             <Nav.Link href="#availability">Preço</Nav.Link>
-          </Nav>
-          <Nav className="justify-content-end mr-4">
-            <Nav.Link href="/">Login</Nav.Link>
           </Nav>
         </Navbar>
     )
