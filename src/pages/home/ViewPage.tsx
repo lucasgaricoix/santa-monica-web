@@ -22,8 +22,7 @@ import {
   faToilet,
   faDrumstickBite,
   faSun,
-  faBed,
-  faChair
+  faBed
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import ModalForm from "../../components/ModalForm";
