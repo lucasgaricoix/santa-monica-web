@@ -21,6 +21,8 @@ import {
   faSwimmingPool,
   faToilet,
   faDrumstickBite,
+  faSun,
+  faBed,
   faChair
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
@@ -190,7 +192,7 @@ class ViewPage extends React.Component<Props, State> {
             </Col>
             <Col sm={3}>
               <h4>Garantia no pagamento</h4>
-              <p>Pague apenas 50% no ato e o restante após a festa.</p>
+              <p>Pague apenas 50% no ato e o restante no dia da festa.</p>
             </Col>
             <Col sm={3}>
               <h4>Disponibilidade para Hospedagem</h4>
@@ -217,27 +219,31 @@ class ViewPage extends React.Component<Props, State> {
                     </ListGroup.Item>
                     <ListGroup.Item>
                       <FontAwesomeIcon icon={faSwimmingPool} />
-                      {" Piscina com cascata e aquecida."}
+                      {" Piscina com aquecedor solar e cascata."}
                     </ListGroup.Item>
                     <ListGroup.Item>
-                      <FontAwesomeIcon icon={faUtensils} />{" "}
-                      {" Pratos e talheres inclusos para todos."}
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                      <FontAwesomeIcon icon={faUtensils} />
-                      {" Mesas e cadeiras inclusos para todos."}
+                      <FontAwesomeIcon icon={faSun} />
+                      {" Cadeiras espreguiçadeira."}
                     </ListGroup.Item>
                     <ListGroup.Item>
                       <FontAwesomeIcon icon={faToilet} />
                       {" Banheiro Masculino e Feminino."}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      <FontAwesomeIcon icon={faBed} />
+                      {" Quarto com suíte."}
                     </ListGroup.Item>
                   </ListGroup>
                 </Col>
                 <Col>
                   <ListGroup className="list-group-flush">
                     <ListGroup.Item>
+                      <FontAwesomeIcon icon={faUtensils} />
+                      {" 10 mesas com 60 cadeiras."}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
                       <FontAwesomeIcon icon={faDrumstickBite} />
-                      {" Churrasqueira com balcão e pia."}
+                      {" Churrasqueira com forno industrial."}
                     </ListGroup.Item>
                     <ListGroup.Item>
                       <FontAwesomeIcon icon={faUtensils} />{" "}
@@ -245,11 +251,11 @@ class ViewPage extends React.Component<Props, State> {
                     </ListGroup.Item>
                     <ListGroup.Item>
                       <FontAwesomeIcon icon={faUtensils} />{" "}
-                      {"Forno Industrial."}
+                      {" Fogão e panelas"}
                     </ListGroup.Item>
                     <ListGroup.Item>
-                      <FontAwesomeIcon icon={faChair} />
-                      {" Cadeiras espreguiçadeira"}
+                      <FontAwesomeIcon icon={faUtensils} />{" "}
+                      {" Pratos, talheres e utensílios de cozinha."}
                     </ListGroup.Item>
                   </ListGroup>
                 </Col>
