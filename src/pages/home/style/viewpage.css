@@ -1,8 +1,9 @@
 .jumbotron-container {
     background-image: 
-        url('../../../assets/img/background-chairs-resize.jpg');
+        url('../../../assets/img/inside/inside-6.jpeg');
     background-repeat: no-repeat;
-    background-size: cover
+    background-size: cover;
+    background-position-y: center;
 }
 
 .title {
@@ -16,7 +17,7 @@
     flex-wrap: wrap;
     justify-content: flex-start;
     align-items: center;
-    height: 500px;
+    height: 600px;
 }
 
 .button-submit-date {
