@@ -9,7 +9,8 @@ import {
   ListGroup,
   Button,
   ListGroupItem,
-  Spinner
+  Spinner,
+  Image
 } from "react-bootstrap";
 import DatePicker, { registerLocale } from "react-datepicker";
 import ptBR from "date-fns/locale/pt-BR";
@@ -26,12 +27,27 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import ModalForm from "../../components/ModalForm";
+import ModalPhotos from "../../components/ModalPhotos";
 import { load } from "../../services/BookService";
 import { Book } from "../../types/Book";
 
 //css
 import "react-datepicker/dist/react-datepicker.css";
 import "./style/viewpage.css";
+
+import inside2 from '../../assets/img/inside/inside-2.jpeg';
+import inside3 from '../../assets/img/inside/inside-3.jpeg';
+import inside4 from '../../assets/img/inside/inside-4.jpeg';
+import inside5 from '../../assets/img/inside/inside-5.jpeg';
+import inside6 from '../../assets/img/inside/inside-6.jpeg';
+
+export const insideImages = [
+  inside2,
+  inside3,
+  inside4,
+  inside5,
+  inside6,
+]
 
 registerLocale("pt-BR", ptBR);
 
@@ -52,6 +68,7 @@ type State = {
   loading: boolean;
   bookDate: Date;
   showModal: boolean;
+  showModalPhotos: boolean;
   price: number;
   bookings: Book[];
 };
@@ -61,6 +78,7 @@ class ViewPage extends React.Component<Props, State> {
     loading: false,
     bookDate: new Date(),
     showModal: false,
+    showModalPhotos: false,
     price: 0,
     bookings: []
   };
@@ -112,6 +130,10 @@ class ViewPage extends React.Component<Props, State> {
       .map((book: Book) => new Date(book.bookDate));
   };
 
+  handleShowModalPhotos = () => {
+    this.setState({ showModalPhotos: !this.state.showModalPhotos })
+  }
+
   getBookingPrice() {
     const { price } = this.state;
 
@@ -143,7 +165,7 @@ class ViewPage extends React.Component<Props, State> {
   }
 
   render() {
-    const { loading, bookDate, showModal, price } = this.state;
+    const { loading, bookDate, showModal, showModalPhotos, price } = this.state;
     return (
       <>
         <Jumbotron className="jumbotron-container">
@@ -155,6 +177,12 @@ class ViewPage extends React.Component<Props, State> {
             showModal={showModal}
             bookDate={bookDate}
             price={price}
+          />
+
+          <ModalPhotos
+            handleShowModalPhotos={this.handleShowModalPhotos}
+            showModalPhotos={showModalPhotos}
+            photos={insideImages}
           />
 
           <Form className="form-input-date" inline>
@@ -205,6 +233,24 @@ class ViewPage extends React.Component<Props, State> {
               <p>O banheiro e lavabo tem acesso exclusivo para a piscina.</p>
             </Col>
           </Row>
+
+          <div>
+            <SectionTitle>Fotos</SectionTitle>
+            <Row>
+              <Col xs={6} md={3}>
+                  <Image src={inside2} alt="2" height={150} width={250} thumbnail />                
+              </Col>
+              <Col xs={6} md={3}>
+                <Image src={inside3} alt="3" height={170} width={250} thumbnail />
+              </Col>
+              <Col xs={6} md={3}>
+                <Image src={inside4} alt="4" height={170} width={250} thumbnail />
+              </Col>
+              <Col xs={6} md={3}>
+                <Image src={inside5} alt="5" height={170} width={250} thumbnail />
+              </Col>
+            </Row>
+          </div>
 
           <div>
             <Section id="place-details" className="place-details">
