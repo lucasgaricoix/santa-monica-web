@@ -22,8 +22,10 @@ import {
   faSwimmingPool,
   faToilet,
   faDrumstickBite,
-  faChair
+  faChair,
+  faPhoneAlt,
 } from "@fortawesome/free-solid-svg-icons";
+import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import styled from "styled-components";
 import ModalForm from "../../components/ModalForm";
 import ModalPhotos from "../../components/ModalPhotos";
@@ -34,19 +36,13 @@ import { Book } from "../../types/Book";
 import "react-datepicker/dist/react-datepicker.css";
 import "./style/viewpage.css";
 
-import inside2 from '../../assets/img/inside/inside-2.jpeg';
-import inside3 from '../../assets/img/inside/inside-3.jpeg';
-import inside4 from '../../assets/img/inside/inside-4.jpeg';
-import inside5 from '../../assets/img/inside/inside-5.jpeg';
-import inside6 from '../../assets/img/inside/inside-6.jpeg';
+import inside2 from "../../assets/img/inside/inside-2.jpeg";
+import inside3 from "../../assets/img/inside/inside-3.jpeg";
+import inside4 from "../../assets/img/inside/inside-4.jpeg";
+import inside5 from "../../assets/img/inside/inside-5.jpeg";
+import inside6 from "../../assets/img/inside/inside-6.jpeg";
 
-export const insideImages = [
-  inside2,
-  inside3,
-  inside4,
-  inside5,
-  inside6,
-]
+export const insideImages = [inside2, inside3, inside4, inside5, inside6];
 
 registerLocale("pt-BR", ptBR);
 
@@ -130,8 +126,8 @@ class ViewPage extends React.Component<Props, State> {
   };
 
   handleShowModalPhotos = () => {
-    this.setState({ showModalPhotos: !this.state.showModalPhotos })
-  }
+    this.setState({ showModalPhotos: !this.state.showModalPhotos });
+  };
 
   getBookingPrice() {
     const { price } = this.state;
@@ -237,16 +233,40 @@ class ViewPage extends React.Component<Props, State> {
             <SectionTitle>Fotos</SectionTitle>
             <Row>
               <Col xs={6} md={3}>
-                  <Image src={inside2} alt="2" height={150} width={250} thumbnail />                
+                <Image
+                  src={inside2}
+                  alt="2"
+                  height={150}
+                  width={250}
+                  thumbnail
+                />
               </Col>
               <Col xs={6} md={3}>
-                <Image src={inside3} alt="3" height={170} width={250} thumbnail />
+                <Image
+                  src={inside3}
+                  alt="3"
+                  height={170}
+                  width={250}
+                  thumbnail
+                />
               </Col>
               <Col xs={6} md={3}>
-                <Image src={inside4} alt="4" height={170} width={250} thumbnail />
+                <Image
+                  src={inside4}
+                  alt="4"
+                  height={170}
+                  width={250}
+                  thumbnail
+                />
               </Col>
               <Col xs={6} md={3}>
-                <Image src={inside5} alt="5" height={170} width={250} thumbnail />
+                <Image
+                  src={inside5}
+                  alt="5"
+                  height={170}
+                  width={250}
+                  thumbnail
+                />
               </Col>
             </Row>
           </div>
@@ -297,6 +317,7 @@ class ViewPage extends React.Component<Props, State> {
                       <FontAwesomeIcon icon={faChair} />
                       {" Cadeiras espreguiçadeira"}
                     </ListGroup.Item>
+                    <ListGroup.Item />
                   </ListGroup>
                 </Col>
               </Row>
@@ -307,50 +328,53 @@ class ViewPage extends React.Component<Props, State> {
               <Row>
                 {loading ? (
                   <Spinner animation="border" role="status">
-                  <span className="sr-only">Carregando...</span>
-                </Spinner>
+                    <span className="sr-only">Carregando...</span>
+                  </Spinner>
                 ) : (
                   <Col>
-                  <DatePicker
-                    className="datepicker-available"
-                    selected={bookDate}
-                    minDate={new Date()}
-                    onChange={date => date && this.setBookDateAndPrices(date)}
-                    monthsShown={2}
-                    excludeDates={this.getExcludeDates()}
-                    locale="pt-BR"
-                    inline
-                  />
-                </Col>
+                    <DatePicker
+                      className="datepicker-available"
+                      selected={bookDate}
+                      minDate={new Date()}
+                      onChange={date => date && this.setBookDateAndPrices(date)}
+                      monthsShown={2}
+                      excludeDates={this.getExcludeDates()}
+                      locale="pt-BR"
+                      inline
+                    />
+                  </Col>
                 )}
                 <Col sm={5}>
                   {loading ? (
                     <Spinner animation="border" role="status">
-                    <span className="sr-only">Carregando...</span>
-                  </Spinner>
-                  ): (
+                      <span className="sr-only">Carregando...</span>
+                    </Spinner>
+                  ) : (
                     <Card id="section-price" border="info">
-                    <Card.Header>
-                      {`Data da reserva: `}
-                      <Bold>{bookDate.toLocaleDateString()}</Bold>
-                    </Card.Header>
-                    <Card.Body>
-                      <Card.Title>{this.getBookingPrice()}</Card.Title>
-                    </Card.Body>
-                    <ListGroup className="list-group-flush">
-                      <ListGroupItem>
-                        Preço da taxa de limpeza incluso.
-                      </ListGroupItem>
-                      <ListGroupItem>
-                        <Button
-                          variant="outline-primary"
-                          onClick={this.handleShowModal}
-                        >
-                          Quero reservar!
-                        </Button>
-                      </ListGroupItem>
-                    </ListGroup>
-                  </Card>
+                      <Card.Header>
+                        {`Data da reserva: `}
+                        <Bold>{bookDate.toLocaleDateString()}</Bold>
+                      </Card.Header>
+                      <Card.Body>
+                        <Card.Title>{this.getBookingPrice()}</Card.Title>
+                      </Card.Body>
+                      <ListGroup className="list-group-flush">
+                        <ListGroupItem>
+                          Preço da taxa de limpeza incluso.
+                        </ListGroupItem>
+                        <ListGroupItem>
+                          <FontAwesomeIcon icon={faPhoneAlt} />{' (44) 99929-0738'}
+                        </ListGroupItem>
+                        <ListGroupItem>
+                          <Button
+                            variant="outline-primary"
+                            onClick={this.handleShowModal}
+                          >
+                            Quero reservar!
+                          </Button>
+                        </ListGroupItem>
+                      </ListGroup>
+                    </Card>
                   )}
                 </Col>
               </Row>
@@ -371,20 +395,17 @@ class ViewPage extends React.Component<Props, State> {
             </Section>
           </div>
         </Container>
+
         <footer className="page-footer">
+          <Section>
+            <SectionTitle />
           <Container>
             <Col>
+              <Row>Contato para informações</Row>
               <Row>
-                <h5 className="title-text">Espaço Santa Mônica</h5>
-              </Row>
-              <Row>
-                <ul>
-                  <li>Contato para informações</li>
-                  <ul>
-                    <ContactPerson>Gabriela: (44) 99178-9996</ContactPerson>
-                    <ContactPerson>Ana Paula: (44) 99921-9315</ContactPerson>
-                  </ul>
-                </ul>
+                <Col>
+                  <FontAwesomeIcon icon={faWhatsapp} /> Sandra: (44) 99929-0738
+                </Col>
               </Row>
 
               <Row>
@@ -394,6 +415,7 @@ class ViewPage extends React.Component<Props, State> {
               </Row>
             </Col>
           </Container>
+          </Section>
         </footer>
       </>
     );
@@ -412,7 +434,7 @@ const Bold = styled.span`
   font-weight: bold;
 `;
 
-const ContactPerson = styled.li`
+const ContactPerson = styled.div`
   font-size: 12px;
 `;
 
