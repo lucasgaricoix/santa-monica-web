@@ -38,9 +38,9 @@
 }
 
 .page-footer {
-    display: flex;
-    background-color: rgba(52, 58, 64);
-    color: #fff;    
+    /* display: flex; */
+    /* background-color: rgba(52, 58, 64); */
+    /* color: #fff; */
 }
 
 .title-text {
