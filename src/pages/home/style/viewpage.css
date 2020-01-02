@@ -54,3 +54,7 @@
 ul {
    list-style: none;
 }
+
+.thumbnail {
+    border-radius: 3px;
+}
