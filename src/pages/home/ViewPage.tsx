@@ -41,9 +41,8 @@ import inside2 from "../../assets/img/inside/inside-2.jpeg";
 import inside3 from "../../assets/img/inside/inside-3.jpeg";
 import inside4 from "../../assets/img/inside/inside-4.jpeg";
 import inside5 from "../../assets/img/inside/inside-5.jpeg";
-import inside6 from "../../assets/img/inside/inside-6.jpeg";
 
-export const insideImages = [inside2, inside3, inside4, inside5, inside6];
+export const insideImages = [inside2, inside3, inside4, inside5];
 
 registerLocale("pt-BR", ptBR);
 
@@ -67,6 +66,7 @@ type State = {
   showModalPhotos: boolean;
   price: number;
   bookings: Book[];
+  currentImage: number;
 };
 
 class ViewPage extends React.Component<Props, State> {
@@ -76,7 +76,8 @@ class ViewPage extends React.Component<Props, State> {
     showModal: false,
     showModalPhotos: false,
     price: 0,
-    bookings: []
+    bookings: [],
+    currentImage: 0
   };
 
   componentDidMount() {
@@ -126,8 +127,11 @@ class ViewPage extends React.Component<Props, State> {
       .map((book: Book) => new Date(book.bookDate));
   };
 
-  handleShowModalPhotos = () => {
-    this.setState({ showModalPhotos: !this.state.showModalPhotos });
+  handleShowModalPhotos = (index?: number) => {
+    this.setState({
+      showModalPhotos: !this.state.showModalPhotos,
+      currentImage: index!
+    });
   };
 
   getBookingPrice() {
@@ -161,25 +165,35 @@ class ViewPage extends React.Component<Props, State> {
   }
 
   render() {
-    const { loading, bookDate, showModal, showModalPhotos, price } = this.state;
+    const {
+      loading,
+      bookDate,
+      showModal,
+      showModalPhotos,
+      price,
+      currentImage
+    } = this.state;
     return (
       <>
-        <Jumbotron className="jumbotron-container">
-          <h1 className="title">Alugue hoje para sua festa</h1>
-          <h2 className="title">Sua diversão começa aqui</h2>
-
-          <ModalForm
-            handleShowModal={this.handleShowModal}
-            showModal={showModal}
-            bookDate={bookDate}
-            price={price}
-          />
-
+        {showModalPhotos ? (
           <ModalPhotos
             handleShowModalPhotos={this.handleShowModalPhotos}
             showModalPhotos={showModalPhotos}
             photos={insideImages}
+            currentImage={currentImage}
           />
+        ) : null}
+
+        <ModalForm
+          handleShowModal={this.handleShowModal}
+          showModal={showModal}
+          bookDate={bookDate}
+          price={price}
+        />
+
+        <Jumbotron className="jumbotron-container">
+          <h1 className="title">Alugue hoje para sua festa</h1>
+          <h2 className="title">Sua diversão começa aqui</h2>
 
           <Form className="form-input-date" inline>
             <Form.Group>
@@ -233,42 +247,18 @@ class ViewPage extends React.Component<Props, State> {
           <div>
             <SectionTitle>Fotos</SectionTitle>
             <Row>
-              <Col xs={6} md={3}>
-                <Image
-                  src={inside2}
-                  alt="2"
-                  height={150}
-                  width={250}
-                  thumbnail
-                />
-              </Col>
-              <Col xs={6} md={3}>
-                <Image
-                  src={inside3}
-                  alt="3"
-                  height={170}
-                  width={250}
-                  thumbnail
-                />
-              </Col>
-              <Col xs={6} md={3}>
-                <Image
-                  src={inside4}
-                  alt="4"
-                  height={170}
-                  width={250}
-                  thumbnail
-                />
-              </Col>
-              <Col xs={6} md={3}>
-                <Image
-                  src={inside5}
-                  alt="5"
-                  height={170}
-                  width={250}
-                  thumbnail
-                />
-              </Col>
+              {insideImages.map((photo, index) => (
+                <Col key={`col-tiny-image-${index}`} xs={6} md={3}>
+                  <Image
+                    className="thumbnail"
+                    src={photo}
+                    alt={`tiny-image-${index}`}
+                    height={200}
+                    width={270}
+                    onClick={() => this.handleShowModalPhotos(index)}
+                  />
+                </Col>
+              ))}
             </Row>
           </div>
 
@@ -298,6 +288,7 @@ class ViewPage extends React.Component<Props, State> {
                       <FontAwesomeIcon icon={faBed} />
                       {" Quarto com suíte."}
                     </ListGroup.Item>
+                    <ListGroup.Item />
                   </ListGroup>
                 </Col>
                 <Col>
@@ -315,8 +306,7 @@ class ViewPage extends React.Component<Props, State> {
                       {" Freezer e geladeira."}
                     </ListGroup.Item>
                     <ListGroup.Item>
-                      <FontAwesomeIcon icon={faUtensils} />{" "}
-                      {" Fogão e panelas"}
+                      <FontAwesomeIcon icon={faUtensils} /> {" Fogão e panelas"}
                     </ListGroup.Item>
                     <ListGroup.Item>
                       <FontAwesomeIcon icon={faUtensils} />{" "}
@@ -368,8 +358,21 @@ class ViewPage extends React.Component<Props, State> {
                           Preço da taxa de limpeza incluso.
                         </ListGroupItem>
                         <ListGroupItem>
-                          <FontAwesomeIcon icon={faPhoneAlt} />{' (44) 99929-0738'}
+                          <FontAwesomeIcon icon={faPhoneAlt} />
+                          {" (44) 99929-0738"}
                         </ListGroupItem>
+                        <ListGroup.Item>
+                          <a
+                            href="https://wa.me/554499219315"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Button variant="outline-primary">
+                              <FontAwesomeIcon icon={faWhatsapp} /> Mensagem via
+                              WhatsApp
+                            </Button>
+                          </a>
+                        </ListGroup.Item>
                         <ListGroupItem>
                           <Button
                             variant="outline-primary"
@@ -404,22 +407,15 @@ class ViewPage extends React.Component<Props, State> {
         <footer className="page-footer">
           <Section>
             <SectionTitle />
-          <Container>
-            <Col>
-              <Row>Contato para informações</Row>
-              <Row>
-                <Col>
-                  <FontAwesomeIcon icon={faWhatsapp} /> Sandra: (44) 99929-0738
-                </Col>
-              </Row>
-
-              <Row>
-                <div className="footer-copyright">
-                  © 2019 Espaço Santa Mônica
-                </div>
-              </Row>
-            </Col>
-          </Container>
+            <Container>
+              <Col>
+                <Row>
+                  <div className="footer-copyright">
+                    © 2020 Espaço Santa Mônica
+                  </div>
+                </Row>
+              </Col>
+            </Container>
           </Section>
         </footer>
       </>
@@ -437,10 +433,6 @@ const SectionTitle = styled.h4`
 
 const Bold = styled.span`
   font-weight: bold;
-`;
-
-const ContactPerson = styled.div`
-  font-size: 12px;
 `;
 
 export default ViewPage;

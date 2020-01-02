@@ -1,27 +1,54 @@
-import React from 'react';
-import { Modal, Image } from 'react-bootstrap';
+import React, { useState, useEffect } from "react";
+import { Carousel, Modal } from "react-bootstrap";
+import "./style/modalphotos.css";
 
 type Props = {
   handleShowModalPhotos(): void;
   showModalPhotos: boolean;
-  photos: string[]
-}
+  photos: string[];
+  currentImage: number;
+};
 
-const ModalPhotos: React.FC<Props> = ({ handleShowModalPhotos, showModalPhotos, photos }) => (
-  <Modal
-    size='lg'
-    show={showModalPhotos}
-    onHide={handleShowModalPhotos}
-    dialogClassName="modal-90w"
-  >
-    <Modal.Header closeButton />
+const ModalPhotos: React.FC<Props> = ({
+  handleShowModalPhotos,
+  showModalPhotos,
+  photos,
+  currentImage
+}) => {
+  const [index, setIndex] = useState(0);
 
-    <Modal.Body>
-        <p>
-          <Image src={photos[0]} width={1000} alt="1" />
-        </p>
-    </Modal.Body>
-  </Modal>
-)
+  useEffect(() => {
+    setIndex(currentImage);
+  }, [currentImage]);
+
+  const handleSelect = (selectedIndex: number) => {
+    setIndex(selectedIndex);
+  };
+
+  return (
+    <Modal
+      show={showModalPhotos}
+      onHide={handleShowModalPhotos}
+      dialogClassName="modal-content"
+    >
+      <Modal.Header closeButton />
+
+      <Modal.Body>
+        <Carousel
+          slide={false}
+          fade={true}
+          activeIndex={index}
+          onSelect={handleSelect}
+        >
+          {photos.map((photo, index) => (
+            <Carousel.Item key={`col-inside-photo-${index}`}>
+              <img src={photo} alt={`inside-${index}`} />
+            </Carousel.Item>
+          ))}
+        </Carousel>
+      </Modal.Body>
+    </Modal>
+  );
+};
 
 export default ModalPhotos;
