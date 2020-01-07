@@ -9,7 +9,6 @@ import {
   ListGroup,
   Button,
   ListGroupItem,
-  Spinner,
   Image
 } from "react-bootstrap";
 import DatePicker, { registerLocale } from "react-datepicker";
@@ -24,7 +23,10 @@ import {
   faDrumstickBite,
   faPhoneAlt,
   faSun,
-  faBed
+  faBed,
+  faShower,
+  faExclamationTriangle,
+  faChair
 } from "@fortawesome/free-solid-svg-icons";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import styled from "styled-components";
@@ -46,9 +48,12 @@ export const insideImages = [inside2, inside3, inside4, inside5];
 
 registerLocale("pt-BR", ptBR);
 
-const HOLIDAY_PRICE = 1200;
-const WEEKEND_PRICE = 800;
-const WEEKDAY_PRICE = 600;
+const HOLIDAY_PRICE = { key: "HOLIDAY_PRICE", price: 1200 };
+const WEEKEND_PRICE = { key: "WEEKEND_PRICE", price: 800 };
+const WEEKDAY_PRICE = { key: "WEEKDAY_PRICE", price: 600 };
+const WEEKEND_LOW_PRICE = { key: "WEEKEND_LOW_PRICE", price: 600 };
+const WEEKDAY_LOW_PRICE = { key: "WEEKDAY_LOW_PRICE", price: 500 };
+const CARNIVAL_PRICE = { key: "CARNIVAL_PRICE", price: 800 };
 
 const HOLIDAYS = [
   new Date("2019/12/24 03:00:00"),
@@ -65,8 +70,10 @@ type State = {
   showModal: boolean;
   showModalPhotos: boolean;
   price: number;
+  priceType: string;
   bookings: Book[];
   currentImage: number;
+  width: number;
 };
 
 class ViewPage extends React.Component<Props, State> {
@@ -76,8 +83,10 @@ class ViewPage extends React.Component<Props, State> {
     showModal: false,
     showModalPhotos: false,
     price: 0,
+    priceType: "",
     bookings: [],
-    currentImage: 0
+    currentImage: 0,
+    width: window.innerWidth,
   };
 
   componentDidMount() {
@@ -92,28 +101,79 @@ class ViewPage extends React.Component<Props, State> {
         this.setBookDateAndPrices(this.state.bookDate);
         this.setState({ loading: false });
       });
+
+      window.addEventListener("resize", this.handleWindowSizeChange);
+  }
+
+  handleWindowSizeChange = () => {
+    this.setState({ width: window.innerWidth })
   }
 
   setBookDateAndPrices = (date: Date) => {
-    const day = date.getDay();
+    this.setState({ bookDate: date });
+
+    const day = date.getDate();
+    const weekDay = date.getDay();
+    const month = date.getMonth() + 1;
     const holiday = HOLIDAYS.filter(
       filterDate =>
         filterDate.getMonth() === date.getMonth() &&
         filterDate.getDate() === date.getDate()
     );
 
-    this.setState({ bookDate: date });
-
     if (holiday.length > 0) {
-      return this.setState({ price: HOLIDAY_PRICE });
+      return this.setState({
+        priceType: HOLIDAY_PRICE.key,
+        price: HOLIDAY_PRICE.price
+      });
     }
 
-    if (day === 0 || day === 5 || day === 6) {
-      return this.setState({ price: WEEKEND_PRICE });
+    if (month === 2 && day === 25) {
+      return this.setState({
+        priceType: CARNIVAL_PRICE.key,
+        price: CARNIVAL_PRICE.price
+      });
     }
 
-    if (day !== 0 && day !== 5 && day !== 6 && holiday.length === 0) {
-      return this.setState({ price: WEEKDAY_PRICE });
+    if (
+      month > 2 &&
+      month < 10 &&
+      (weekDay === 0 || weekDay === 5 || weekDay === 6)
+    ) {
+      return this.setState({
+        priceType: WEEKEND_LOW_PRICE.key,
+        price: WEEKEND_LOW_PRICE.price
+      });
+    }
+
+    if (
+      month > 2 &&
+      month < 10 &&
+      weekDay !== 0 && weekDay !== 5 && weekDay !== 6 && holiday.length === 0
+    ) {
+      return this.setState({
+        priceType: WEEKDAY_LOW_PRICE.key,
+        price: WEEKDAY_LOW_PRICE.price
+      });
+    }
+
+    if (weekDay === 0 || weekDay === 5 || weekDay === 6) {
+      return this.setState({
+        priceType: WEEKEND_PRICE.key,
+        price: WEEKEND_PRICE.price
+      });
+    }
+
+    if (
+      weekDay !== 0 &&
+      weekDay !== 5 &&
+      weekDay !== 6 &&
+      holiday.length === 0
+    ) {
+      return this.setState({
+        priceType: WEEKDAY_PRICE.key,
+        price: WEEKDAY_PRICE.price
+      });
     }
   };
 
@@ -135,24 +195,45 @@ class ViewPage extends React.Component<Props, State> {
   };
 
   getBookingPrice() {
-    const { price } = this.state;
+    const { price, priceType } = this.state;
 
-    switch (price) {
-      case HOLIDAY_PRICE:
+    switch (priceType) {
+      case HOLIDAY_PRICE.key:
         return (
           <div>
             <p>Feriados e datas comemorativas</p>
             <p>R${price},00</p>
           </div>
         );
-      case WEEKDAY_PRICE:
+      case CARNIVAL_PRICE.key:
+        return (
+          <div>
+            <p>Preço especial de Carnaval</p>
+            <p>R${price},00</p>
+          </div>
+        );
+      case WEEKDAY_LOW_PRICE.key:
+        return (
+          <div>
+            <p>Baixa temporada durante a semana</p>
+            <p>R${price},00</p>
+          </div>
+        );
+      case WEEKEND_LOW_PRICE.key:
+        return (
+          <div>
+            <p>Baixa temporada nos finais de semana</p>
+            <p>R${price},00</p>
+          </div>
+        );
+      case WEEKDAY_PRICE.key:
         return (
           <div>
             <p>Durante a semana</p>
             <p>R${price},00</p>
           </div>
         );
-      case WEEKEND_PRICE:
+      case WEEKEND_PRICE.key:
         return (
           <div>
             <p>Finais de semana</p>
@@ -164,14 +245,19 @@ class ViewPage extends React.Component<Props, State> {
     }
   }
 
+  monthsToShow = () => {
+    const {width} = this.state;
+    return width < 550 ? 1 : 2
+  }
+
   render() {
     const {
-      loading,
       bookDate,
       showModal,
       showModalPhotos,
       price,
-      currentImage
+      currentImage,
+      width
     } = this.state;
     return (
       <>
@@ -195,11 +281,11 @@ class ViewPage extends React.Component<Props, State> {
           <h1 className="title">Alugue hoje para sua festa</h1>
           <h2 className="title">Sua diversão começa aqui</h2>
 
-          <Form className="form-input-date" inline>
-            <Form.Group>
-              <Form.Label column>Disponibilidade</Form.Label>
+          <Form className="form" inline>
+            <Form.Group >
+              {width > 550 ? (<Form.Label column>Disponibilidade</Form.Label>) : (<Form.Label>Disponibilidade</Form.Label>)}
               <DatePicker
-                className="form-control"
+                className={"form-control"}
                 selected={bookDate}
                 excludeDates={this.getExcludeDates()}
                 minDate={new Date()}
@@ -209,7 +295,6 @@ class ViewPage extends React.Component<Props, State> {
               />
             </Form.Group>
             <Button
-              className="button-submit-date"
               type="submit"
               href="#availability"
             >
@@ -250,7 +335,7 @@ class ViewPage extends React.Component<Props, State> {
               {insideImages.map((photo, index) => (
                 <Col key={`col-tiny-image-${index}`} xs={6} md={3}>
                   <Image
-                    className="thumbnail"
+                    thumbnail
                     src={photo}
                     alt={`tiny-image-${index}`}
                     height={200}
@@ -273,20 +358,34 @@ class ViewPage extends React.Component<Props, State> {
                       {" Capacidade para 60 pessoas."}
                     </ListGroup.Item>
                     <ListGroup.Item>
+                      <FontAwesomeIcon icon={faExclamationTriangle} />
+                      {
+                        " Portão eletrônico, alarme e cerca elétrica para sua segurança."
+                      }
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      <FontAwesomeIcon icon={faBed} />
+                      {" Quarto com suíte."}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
                       <FontAwesomeIcon icon={faSwimmingPool} />
-                      {" Piscina com aquecedor solar e cascata."}
+                      {" Piscina com aquecedor solar, cascata e iluminação."}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      <FontAwesomeIcon icon={faShower} />
+                      {" Ducha na piscina."}
                     </ListGroup.Item>
                     <ListGroup.Item>
                       <FontAwesomeIcon icon={faSun} />
-                      {" Cadeiras espreguiçadeira."}
+                      {" Cadeiras espreguiçadeiras de fibra."}
                     </ListGroup.Item>
                     <ListGroup.Item>
                       <FontAwesomeIcon icon={faToilet} />
                       {" Banheiro Masculino e Feminino."}
                     </ListGroup.Item>
                     <ListGroup.Item>
-                      <FontAwesomeIcon icon={faBed} />
-                      {" Quarto com suíte."}
+                      <FontAwesomeIcon icon={faToilet} />
+                      {" Lavabo separado do banheiro."}
                     </ListGroup.Item>
                     <ListGroup.Item />
                   </ListGroup>
@@ -295,6 +394,14 @@ class ViewPage extends React.Component<Props, State> {
                   <ListGroup className="list-group-flush">
                     <ListGroup.Item>
                       <FontAwesomeIcon icon={faUtensils} />
+                      {" 1 mesa retangular de mandeira para servir a comida."}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      <FontAwesomeIcon icon={faChair} />
+                      {" Banquetas altas de fibra."}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      <FontAwesomeIcon icon={faChair} />
                       {" 10 mesas com 60 cadeiras."}
                     </ListGroup.Item>
                     <ListGroup.Item>
@@ -303,14 +410,19 @@ class ViewPage extends React.Component<Props, State> {
                     </ListGroup.Item>
                     <ListGroup.Item>
                       <FontAwesomeIcon icon={faUtensils} />{" "}
-                      {" Freezer e geladeira."}
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                      <FontAwesomeIcon icon={faUtensils} /> {" Fogão e panelas"}
+                      {" Geladeira e Freezer horizontal."}
                     </ListGroup.Item>
                     <ListGroup.Item>
                       <FontAwesomeIcon icon={faUtensils} />{" "}
-                      {" Pratos, talheres e utensílios de cozinha."}
+                      {" Fogão cooktop 5 bocas e panelas"}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      <FontAwesomeIcon icon={faUtensils} />{" "}
+                      {" 60 pratos, talheres."}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      <FontAwesomeIcon icon={faUtensils} />{" "}
+                      {" Armário com utensílios de cozinha."}
                     </ListGroup.Item>
                     <ListGroup.Item />
                   </ListGroup>
@@ -321,69 +433,57 @@ class ViewPage extends React.Component<Props, State> {
             <Section id="availability" className="section-datepicker-inline">
               <SectionTitle>Disponibilidade</SectionTitle>
               <Row>
-                {loading ? (
-                  <Spinner animation="border" role="status">
-                    <span className="sr-only">Carregando...</span>
-                  </Spinner>
-                ) : (
-                  <Col>
-                    <DatePicker
-                      className="datepicker-available"
-                      selected={bookDate}
-                      minDate={new Date()}
-                      onChange={date => date && this.setBookDateAndPrices(date)}
-                      monthsShown={2}
-                      excludeDates={this.getExcludeDates()}
-                      locale="pt-BR"
-                      inline
-                    />
-                  </Col>
-                )}
+                <Col>
+                  <DatePicker
+                    className="datepicker-available"
+                    selected={bookDate}
+                    minDate={new Date()}
+                    onChange={date => date && this.setBookDateAndPrices(date)}
+                    monthsShown={this.monthsToShow()}
+                    excludeDates={this.getExcludeDates()}
+                    locale="pt-BR"
+                    inline
+                  />
+                </Col>
                 <Col sm={5}>
-                  {loading ? (
-                    <Spinner animation="border" role="status">
-                      <span className="sr-only">Carregando...</span>
-                    </Spinner>
-                  ) : (
-                    <Card id="section-price" border="info">
-                      <Card.Header>
-                        {`Data da reserva: `}
-                        <Bold>{bookDate.toLocaleDateString()}</Bold>
-                      </Card.Header>
-                      <Card.Body>
-                        <Card.Title>{this.getBookingPrice()}</Card.Title>
-                      </Card.Body>
-                      <ListGroup className="list-group-flush">
-                        <ListGroupItem>
-                          Preço da taxa de limpeza incluso.
-                        </ListGroupItem>
-                        <ListGroupItem>
-                          <FontAwesomeIcon icon={faPhoneAlt} />
-                          {" (44) 99929-0738"}
-                        </ListGroupItem>
-                        <ListGroup.Item>
-                          <a
-                            href="https://wa.me/554499219315"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <Button variant="outline-primary">
-                              <FontAwesomeIcon icon={faWhatsapp} /> Mensagem via
-                              WhatsApp
-                            </Button>
-                          </a>
-                        </ListGroup.Item>
-                        <ListGroupItem>
-                          <Button
-                            variant="outline-primary"
-                            onClick={this.handleShowModal}
-                          >
-                            Quero reservar!
+                  <Card id="section-price" border="info">
+                    <Card.Header>
+                      {`Data da reserva: `}
+                      <Bold>{bookDate.toLocaleDateString()}</Bold>
+                    </Card.Header>
+                    <Card.Body>
+                      <Card.Title>{this.getBookingPrice()}</Card.Title>
+                    </Card.Body>
+                    <ListGroup className="list-group-flush">
+                      <ListGroupItem>
+                        Preço da taxa de limpeza incluso.
+                      </ListGroupItem>
+                      <ListGroupItem>
+                        <FontAwesomeIcon icon={faPhoneAlt} />
+                        {" (44) 99929-0738"}
+                      </ListGroupItem>
+                      <ListGroup.Item>
+                        <a
+                          href="https://wa.me/554499290738"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Button variant="outline-primary">
+                            <FontAwesomeIcon icon={faWhatsapp} /> Mensagem via
+                            WhatsApp
                           </Button>
-                        </ListGroupItem>
-                      </ListGroup>
-                    </Card>
-                  )}
+                        </a>
+                      </ListGroup.Item>
+                      <ListGroupItem>
+                        <Button
+                          variant="outline-primary"
+                          onClick={this.handleShowModal}
+                        >
+                          Quero reservar!
+                        </Button>
+                      </ListGroupItem>
+                    </ListGroup>
+                  </Card>
                 </Col>
               </Row>
             </Section>
