@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import "./style/header.css";
-import logo from "../../assets/img/logo-santa-monica.jpg";
+import logo from "../../assets/img/logo-santa-monica.png";
 
 const Header: React.FC = () => {
   const [width, setWidth] = useState(window.innerWidth);
