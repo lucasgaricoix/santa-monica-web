@@ -14,19 +14,13 @@
 .jumbotron {
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: flex-start;
     align-items: center;
     height: 600px;
 }
 
-.button-submit-date {
-    margin: 15px;
-}
-
-.form-input-date {
+.form {
     margin: auto;
-    padding: 5px;
+    padding: 10px;
     background-color: rgba(0, 0, 0, 0.8);
     border-radius: 10px;
 }
@@ -35,12 +29,6 @@
     color: #fff;
     font-weight: 600;
     font-size: 20px;
-}
-
-.page-footer {
-    /* display: flex; */
-    /* background-color: rgba(52, 58, 64); */
-    /* color: #fff; */
 }
 
 .title-text {
@@ -53,8 +41,4 @@
 
 ul {
    list-style: none;
-}
-
-.thumbnail {
-    border-radius: 3px;
 }
