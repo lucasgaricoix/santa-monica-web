@@ -394,7 +394,7 @@ class ViewPage extends React.Component<Props, State> {
                   <ListGroup className="list-group-flush">
                     <ListGroup.Item>
                       <FontAwesomeIcon icon={faUtensils} />
-                      {" 1 mesa retangular de mandeira para servir a comida."}
+                      {" Mesa retangular de madeira."}
                     </ListGroup.Item>
                     <ListGroup.Item>
                       <FontAwesomeIcon icon={faChair} />
@@ -406,7 +406,7 @@ class ViewPage extends React.Component<Props, State> {
                     </ListGroup.Item>
                     <ListGroup.Item>
                       <FontAwesomeIcon icon={faDrumstickBite} />
-                      {" Churrasqueira com forno industrial."}
+                      {" Churrasqueira e forno industrial."}
                     </ListGroup.Item>
                     <ListGroup.Item>
                       <FontAwesomeIcon icon={faUtensils} />{" "}
