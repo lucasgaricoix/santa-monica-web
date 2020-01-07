@@ -34,15 +34,14 @@ const ModalPhotos: React.FC<Props> = ({
       <Modal.Header closeButton />
 
       <Modal.Body>
-        <Carousel
-          slide={false}
-          fade={true}
-          activeIndex={index}
-          onSelect={handleSelect}
-        >
+        <Carousel fade={true} activeIndex={index} onSelect={handleSelect}>
           {photos.map((photo, index) => (
             <Carousel.Item key={`col-inside-photo-${index}`}>
-              <img src={photo} alt={`inside-${index}`} />
+              <img
+                style={{ maxWidth: "100%", height: "auto" }}
+                src={photo}
+                alt={`inside-${index}`}
+              />
             </Carousel.Item>
           ))}
         </Carousel>

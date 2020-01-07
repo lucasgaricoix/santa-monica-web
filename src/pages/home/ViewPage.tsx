@@ -86,7 +86,7 @@ class ViewPage extends React.Component<Props, State> {
     priceType: "",
     bookings: [],
     currentImage: 0,
-    width: window.innerWidth,
+    width: window.innerWidth
   };
 
   componentDidMount() {
@@ -102,12 +102,12 @@ class ViewPage extends React.Component<Props, State> {
         this.setState({ loading: false });
       });
 
-      window.addEventListener("resize", this.handleWindowSizeChange);
+    window.addEventListener("resize", this.handleWindowSizeChange);
   }
 
   handleWindowSizeChange = () => {
-    this.setState({ width: window.innerWidth })
-  }
+    this.setState({ width: window.innerWidth });
+  };
 
   setBookDateAndPrices = (date: Date) => {
     this.setState({ bookDate: date });
@@ -149,7 +149,10 @@ class ViewPage extends React.Component<Props, State> {
     if (
       month > 2 &&
       month < 10 &&
-      weekDay !== 0 && weekDay !== 5 && weekDay !== 6 && holiday.length === 0
+      weekDay !== 0 &&
+      weekDay !== 5 &&
+      weekDay !== 6 &&
+      holiday.length === 0
     ) {
       return this.setState({
         priceType: WEEKDAY_LOW_PRICE.key,
@@ -246,9 +249,22 @@ class ViewPage extends React.Component<Props, State> {
   }
 
   monthsToShow = () => {
-    const {width} = this.state;
-    return width < 550 ? 1 : 2
-  }
+    const { width } = this.state;
+    return width < 550 ? 1 : 2;
+  };
+
+  mapsWidthAndHeight = () => {
+    const { width } = this.state;
+    if (width < 550) {
+      return {
+        border: 0,
+        width: "auto",
+        height: "auto"
+      };
+    }
+
+    return { border: 0, width: 800, height: 450 };
+  };
 
   render() {
     const {
@@ -259,6 +275,7 @@ class ViewPage extends React.Component<Props, State> {
       currentImage,
       width
     } = this.state;
+
     return (
       <>
         {showModalPhotos ? (
@@ -282,8 +299,12 @@ class ViewPage extends React.Component<Props, State> {
           <h2 className="title">Sua diversão começa aqui</h2>
 
           <Form className="form" inline>
-            <Form.Group >
-              {width > 550 ? (<Form.Label column>Disponibilidade</Form.Label>) : (<Form.Label>Disponibilidade</Form.Label>)}
+            <Form.Group>
+              {width > 550 ? (
+                <Form.Label column>Disponibilidade</Form.Label>
+              ) : (
+                <Form.Label>Disponibilidade</Form.Label>
+              )}
               <DatePicker
                 className={"form-control"}
                 selected={bookDate}
@@ -294,10 +315,7 @@ class ViewPage extends React.Component<Props, State> {
                 locale="pt-BR"
               />
             </Form.Group>
-            <Button
-              type="submit"
-              href="#availability"
-            >
+            <Button type="submit" href="#availability">
               Pesquisar
             </Button>
           </Form>
@@ -494,9 +512,7 @@ class ViewPage extends React.Component<Props, State> {
               <div>
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d915.427233424145!2d-51.97698204130726!3d-23.398740832335065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ecd6885745f567%3A0xaac13ecaa32dda3d!2sR.%20Guaratinga%2C%20520%20-%20Jardim%20dos%20Passaros%2C%20Maring%C3%A1%20-%20PR%2C%2087075-240!5e0!3m2!1spt-BR!2sbr!4v1569817365041!5m2!1spt-BR!2sbr"
-                  width="800"
-                  height="450"
-                  style={{ border: 0 }}
+                  style={this.mapsWidthAndHeight()}
                   title="googleMaps"
                 />
               </div>
