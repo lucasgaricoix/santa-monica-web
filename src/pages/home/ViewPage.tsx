@@ -9,7 +9,7 @@ import {
   ListGroup,
   Button,
   ListGroupItem,
-  Image
+  Image,
 } from "react-bootstrap";
 import DatePicker, { registerLocale } from "react-datepicker";
 import ptBR from "date-fns/locale/pt-BR";
@@ -26,7 +26,7 @@ import {
   faBed,
   faShower,
   faExclamationTriangle,
-  faChair
+  faChair,
 } from "@fortawesome/free-solid-svg-icons";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import styled from "styled-components";
@@ -59,7 +59,7 @@ const HOLIDAYS = [
   new Date("2019/12/24 03:00:00"),
   new Date("2019/12/25 03:00:00"),
   new Date("2019/12/31 03:00:00"),
-  new Date("2020/01/01 03:00:00")
+  new Date("2020/01/01 03:00:00"),
 ];
 
 type Props = {};
@@ -86,15 +86,15 @@ class ViewPage extends React.Component<Props, State> {
     priceType: "",
     bookings: [],
     currentImage: 0,
-    width: window.innerWidth
+    width: window.innerWidth,
   };
 
   componentDidMount() {
     load()
-      .then(response => {
+      .then((response) => {
         this.setState({ loading: true, bookings: response.data });
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("Erro na requisição: ", error);
       })
       .finally(() => {
@@ -116,7 +116,7 @@ class ViewPage extends React.Component<Props, State> {
     const weekDay = date.getDay();
     const month = date.getMonth() + 1;
     const holiday = HOLIDAYS.filter(
-      filterDate =>
+      (filterDate) =>
         filterDate.getMonth() === date.getMonth() &&
         filterDate.getDate() === date.getDate()
     );
@@ -124,14 +124,14 @@ class ViewPage extends React.Component<Props, State> {
     if (holiday.length > 0) {
       return this.setState({
         priceType: HOLIDAY_PRICE.key,
-        price: HOLIDAY_PRICE.price
+        price: HOLIDAY_PRICE.price,
       });
     }
 
     if (month === 2 && day === 25) {
       return this.setState({
         priceType: CARNIVAL_PRICE.key,
-        price: CARNIVAL_PRICE.price
+        price: CARNIVAL_PRICE.price,
       });
     }
 
@@ -142,7 +142,7 @@ class ViewPage extends React.Component<Props, State> {
     ) {
       return this.setState({
         priceType: WEEKEND_LOW_PRICE.key,
-        price: WEEKEND_LOW_PRICE.price
+        price: WEEKEND_LOW_PRICE.price,
       });
     }
 
@@ -156,14 +156,14 @@ class ViewPage extends React.Component<Props, State> {
     ) {
       return this.setState({
         priceType: WEEKDAY_LOW_PRICE.key,
-        price: WEEKDAY_LOW_PRICE.price
+        price: WEEKDAY_LOW_PRICE.price,
       });
     }
 
     if (weekDay === 0 || weekDay === 5 || weekDay === 6) {
       return this.setState({
         priceType: WEEKEND_PRICE.key,
-        price: WEEKEND_PRICE.price
+        price: WEEKEND_PRICE.price,
       });
     }
 
@@ -175,7 +175,7 @@ class ViewPage extends React.Component<Props, State> {
     ) {
       return this.setState({
         priceType: WEEKDAY_PRICE.key,
-        price: WEEKDAY_PRICE.price
+        price: WEEKDAY_PRICE.price,
       });
     }
   };
@@ -185,15 +185,17 @@ class ViewPage extends React.Component<Props, State> {
   };
 
   getExcludeDates = () => {
-    return this.state.bookings
+    const dates = this.state.bookings
       .filter((book: Book) => book.isConfirmed === true)
       .map((book: Book) => new Date(book.bookDate));
+
+    return [{ "react-datepicker__day--highlighted-custom-2": dates }];
   };
 
   handleShowModalPhotos = (index?: number) => {
     this.setState({
       showModalPhotos: !this.state.showModalPhotos,
-      currentImage: index!
+      currentImage: index!,
     });
   };
 
@@ -259,7 +261,7 @@ class ViewPage extends React.Component<Props, State> {
       return {
         border: 0,
         width: "auto",
-        height: "auto"
+        height: "auto",
       };
     }
 
@@ -273,7 +275,7 @@ class ViewPage extends React.Component<Props, State> {
       showModalPhotos,
       price,
       currentImage,
-      width
+      width,
     } = this.state;
 
     return (
@@ -308,9 +310,12 @@ class ViewPage extends React.Component<Props, State> {
               <DatePicker
                 className={"form-control"}
                 selected={bookDate}
-                excludeDates={this.getExcludeDates()}
+                // excludeDates={this.getExcludeDates()}
+                highlightDates={this.getExcludeDates()}
                 minDate={new Date()}
-                onChange={date => date && this.setBookDateAndPrices(date)}
+                onChange={(date: Date) =>
+                  date && this.setBookDateAndPrices(date)
+                }
                 dateFormat="dd/MM/yyyy"
                 locale="pt-BR"
               />
@@ -456,9 +461,12 @@ class ViewPage extends React.Component<Props, State> {
                     className="datepicker-available"
                     selected={bookDate}
                     minDate={new Date()}
-                    onChange={date => date && this.setBookDateAndPrices(date)}
+                    onChange={(date: Date) =>
+                      date && this.setBookDateAndPrices(date)
+                    }
                     monthsShown={this.monthsToShow()}
-                    excludeDates={this.getExcludeDates()}
+                    highlightDates={this.getExcludeDates()}
+                    // excludeDates={this.getExcludeDates()}
                     locale="pt-BR"
                     inline
                   />
@@ -492,14 +500,6 @@ class ViewPage extends React.Component<Props, State> {
                           </Button>
                         </a>
                       </ListGroup.Item>
-                      <ListGroupItem>
-                        <Button
-                          variant="outline-primary"
-                          onClick={this.handleShowModal}
-                        >
-                          Quero reservar!
-                        </Button>
-                      </ListGroupItem>
                     </ListGroup>
                   </Card>
                 </Col>
