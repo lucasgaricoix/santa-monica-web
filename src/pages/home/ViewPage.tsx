@@ -199,57 +199,6 @@ class ViewPage extends React.Component<Props, State> {
     });
   };
 
-  getBookingPrice() {
-    const { price, priceType } = this.state;
-
-    switch (priceType) {
-      case HOLIDAY_PRICE.key:
-        return (
-          <div>
-            <p>Feriados e datas comemorativas</p>
-            <p>R${price},00</p>
-          </div>
-        );
-      case CARNIVAL_PRICE.key:
-        return (
-          <div>
-            <p>Preço especial de Carnaval</p>
-            <p>R${price},00</p>
-          </div>
-        );
-      case WEEKDAY_LOW_PRICE.key:
-        return (
-          <div>
-            <p>Baixa temporada durante a semana</p>
-            <p>R${price},00</p>
-          </div>
-        );
-      case WEEKEND_LOW_PRICE.key:
-        return (
-          <div>
-            <p>Baixa temporada nos finais de semana</p>
-            <p>R${price},00</p>
-          </div>
-        );
-      case WEEKDAY_PRICE.key:
-        return (
-          <div>
-            <p>Durante a semana</p>
-            <p>R${price},00</p>
-          </div>
-        );
-      case WEEKEND_PRICE.key:
-        return (
-          <div>
-            <p>Finais de semana</p>
-            <p>R${price},00</p>
-          </div>
-        );
-      default:
-        return <div></div>;
-    }
-  }
-
   monthsToShow = () => {
     const { width } = this.state;
     return width < 550 ? 1 : 2;
@@ -478,12 +427,9 @@ class ViewPage extends React.Component<Props, State> {
                       <Bold>{bookDate.toLocaleDateString()}</Bold>
                     </Card.Header>
                     <Card.Body>
-                      <Card.Title>{this.getBookingPrice()}</Card.Title>
+                      <Card.Title>Preço e disponibilidade sob consulta</Card.Title>
                     </Card.Body>
                     <ListGroup className="list-group-flush">
-                      <ListGroupItem>
-                        Preço da taxa de limpeza incluso.
-                      </ListGroupItem>
                       <ListGroupItem>
                         <FontAwesomeIcon icon={faPhoneAlt} />
                         {" (44) 99929-0738"}
